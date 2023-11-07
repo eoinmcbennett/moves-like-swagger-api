@@ -1,0 +1,4 @@
+logging:
+  level: INFO
+  loggers:
+    org.kainos.ea.team2: DEBUG
