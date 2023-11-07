@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+# true
+
+>>>>>>> bda586cf84853836ddb714e1696825299555ef63
 How to start the true application
 ---
 
@@ -8,4 +13,8 @@ How to start the true application
 Health Check
 ---
 
+<<<<<<< HEAD
 To see your applications health enter url `http://localhost:8081/healthcheck
+=======
+To see your applications health enter url `http://localhost:8081/healthcheck`
+>>>>>>> bda586cf84853836ddb714e1696825299555ef63
