@@ -7,15 +7,24 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 public final class MovesLikeSwaggerConfiguration extends Configuration {
-    @Valid
-    @NotNull
-    private final SwaggerBundleConfiguration swagger = new SwaggerBundleConfiguration();
+  /**
+   * Swagger configuration bundle.
+   * Required by Swagger
+   */
+  @Valid
+  @NotNull
+  private final SwaggerBundleConfiguration
+          swagger = new SwaggerBundleConfiguration();
 
-    @JsonProperty("swagger")
-    public SwaggerBundleConfiguration getSwagger() {
-        swagger.setResourcePackage("org.kainos.ea.team2");
-        String[] schemes = {"http","https"};
-        swagger.setSchemes(schemes);
-        return swagger;
-    }
+  /**
+   * Gets the current swagger bundle configuration.
+   * @return SwaggerBundleConfiguration
+   */
+  @JsonProperty("swagger")
+  public SwaggerBundleConfiguration getSwagger() {
+    swagger.setResourcePackage("org.kainos.ea.team2");
+    String[] schemes = {"http", "https"};
+    swagger.setSchemes(schemes);
+    return swagger;
+  }
 }

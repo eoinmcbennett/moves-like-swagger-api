@@ -179,7 +179,6 @@
                     <enableFilesSummary>true</enableFilesSummary>
                     <enableRulesSummary>true</enableRulesSummary>
                     <consoleOutput>true</consoleOutput>
-                    <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
                 </configuration>
 
             </plugin>

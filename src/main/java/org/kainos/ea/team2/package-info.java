@@ -1,5 +1,5 @@
 /**
- * Moves like swagger drop wizard API
+ * Moves like swagger drop wizard API.
  * @author Moves Like Swagger
  * @version 0.0
  */

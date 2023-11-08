@@ -5,11 +5,22 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public final class DatabaseConnector {
+    /**
+     * The currently active connection to the database.
+     */
     private static Connection conn;
 
     private DatabaseConnector() { }
 
-    public static Connection getConnection() throws SQLException, IllegalArgumentException {
+    /**
+     * Gets the current connection to the database.
+     * If no connection exists it will attempt to connect.
+     * @return Connection
+     * @throws SQLException Thrown on connection attempt error.
+     * @throws IllegalArgumentException Thrown if environment vars not set.
+     */
+    public static Connection getConnection()
+            throws SQLException, IllegalArgumentException {
         if (conn != null && !conn.isClosed()) {
             return conn;
         }
@@ -23,7 +34,8 @@ public final class DatabaseConnector {
             throw new IllegalArgumentException("Environment variables not set");
         }
 
-        conn = DriverManager.getConnection("jdbc:mysql://" + host + "/" + name + "?useSSL=false", user, password);
+        String connStr = "jdbc:mysql://" + host + "/" + name + "?useSSL=false";
+        conn = DriverManager.getConnection(connStr, user, password);
         return conn;
     }
 }

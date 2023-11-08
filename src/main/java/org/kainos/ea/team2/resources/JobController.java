@@ -18,27 +18,27 @@ import java.util.List;
 @Api("Moves Like Swagger API")
 public class JobController {
 
-    /**
-     * Provides a list of jobs within the system
-     * @return List of jobs in JSON or nothing
-     */
-    @GET
-    @Path("/jobs")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getJobs() {
-        try {
-            Connection conn = DatabaseConnector.getConnection();
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT job_name FROM JobRoles");
-            List<String> jobs = new ArrayList<>();
+  /**
+   * Provides a list of jobs within the system.
+   * @return List of jobs in JSON or nothing
+   */
+  @GET
+  @Path("/jobs")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getJobs() {
+    try {
+      Connection conn = DatabaseConnector.getConnection();
+      Statement st = conn.createStatement();
+      ResultSet rs = st.executeQuery("SELECT job_name FROM JobRoles");
+      List<String> jobs = new ArrayList<>();
 
-            while (rs.next()) {
-                jobs.add(rs.getString("job_name"));
-            }
+      while (rs.next()) {
+        jobs.add(rs.getString("job_name"));
+      }
 
-            return Response.ok().entity(jobs).build();
-        } catch (Exception e) {
-            return Response.serverError().entity(e.getMessage()).build();
-        }
+      return Response.ok().entity(jobs).build();
+    } catch (Exception e) {
+      return Response.serverError().entity(e.getMessage()).build();
     }
+  }
 }
