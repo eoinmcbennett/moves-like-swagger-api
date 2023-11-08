@@ -1,4 +1,4 @@
-FROM maven:latest
+FROM maven:alpine
 WORKDIR /code
 COPY . /code 
 
