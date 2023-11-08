@@ -8,4 +8,5 @@
     <suppress checks="Javadoc" files="."/>
     <suppress checks="LineLength" files="."/>
     <suppress checks="WhitespaceAfter" files="."/>
+    <suppress checks="WhitespaceAround" files="."/>
 </suppressions>

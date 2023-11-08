@@ -6,7 +6,7 @@ import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-public class MovesLikeSwaggerConfiguration extends Configuration {
+public final class MovesLikeSwaggerConfiguration extends Configuration {
     @Valid
     @NotNull
     private final SwaggerBundleConfiguration swagger = new SwaggerBundleConfiguration();

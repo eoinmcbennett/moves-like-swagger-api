@@ -22,7 +22,7 @@ public final class MovesLikeSwaggerApplication extends Application<MovesLikeSwag
     public void initialize(final Bootstrap<MovesLikeSwaggerConfiguration> bootstrap) {
         bootstrap.addBundle(new SwaggerBundle<MovesLikeSwaggerConfiguration>() {
             @Override
-            protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(MovesLikeSwaggerConfiguration configuration) {
+            protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(final MovesLikeSwaggerConfiguration configuration) {
                 return configuration.getSwagger();
             }
         });

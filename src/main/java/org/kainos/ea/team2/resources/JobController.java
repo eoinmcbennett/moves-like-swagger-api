@@ -37,7 +37,7 @@ public class JobController {
             }
 
             return Response.ok().entity(jobs).build();
-        } catch(Exception e){
+        } catch (Exception e) {
             return Response.serverError().entity(e.getMessage()).build();
         }
     }
