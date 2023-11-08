@@ -1,7 +1,7 @@
 logging:
   level: INFO
   loggers:
-    com.kainos.ea: DEBUG
+    org.kainos.ea.team2: DEBUG
 
 swagger:
-  resourcePackage: com.kainos.ea
+  resourcePackage: org.kainos.ea.team2
