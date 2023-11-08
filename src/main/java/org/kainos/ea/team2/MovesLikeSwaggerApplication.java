@@ -3,6 +3,8 @@ package org.kainos.ea.team2;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.federecio.dropwizard.swagger.SwaggerBundle;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import org.kainos.ea.team2.resources.JobController;
 
 public final class MovesLikeSwaggerApplication extends Application<MovesLikeSwaggerConfiguration> {
@@ -18,7 +20,12 @@ public final class MovesLikeSwaggerApplication extends Application<MovesLikeSwag
 
     @Override
     public void initialize(final Bootstrap<MovesLikeSwaggerConfiguration> bootstrap) {
-
+        bootstrap.addBundle(new SwaggerBundle<MovesLikeSwaggerConfiguration>() {
+            @Override
+            protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(MovesLikeSwaggerConfiguration configuration) {
+                return configuration.getSwagger();
+            }
+        });
     }
 
     @Override

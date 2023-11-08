@@ -1,5 +1,6 @@
 package org.kainos.ea.team2.resources;
 
+import io.swagger.annotations.Api;
 import org.kainos.ea.team2.db.DatabaseConnector;
 
 import javax.ws.rs.GET;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/api")
+@Api("Moves Like Swagger API")
 public class JobController {
 
     /**
@@ -35,8 +37,8 @@ public class JobController {
             }
 
             return Response.ok().entity(jobs).build();
-        } catch (Exception e) {
-            return Response.serverError().build();
+        } catch(Exception e){
+            return Response.serverError().entity(e.getMessage()).build();
         }
     }
 }
