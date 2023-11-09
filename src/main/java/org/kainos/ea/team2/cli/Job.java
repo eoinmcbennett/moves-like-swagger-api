@@ -1,5 +1,8 @@
 package org.kainos.ea.team2.cli;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Job {
 
     // instance vars
@@ -19,7 +22,8 @@ public class Job {
      * @param jobId
      * @param jobName
      */
-    public Job(int jobId, String jobName) {
+    @JsonCreator
+    public Job(@JsonProperty("jobId") int jobId, @JsonProperty("jobName") String jobName) {
         this.jobId = jobId;
         this.jobName = jobName;
     }

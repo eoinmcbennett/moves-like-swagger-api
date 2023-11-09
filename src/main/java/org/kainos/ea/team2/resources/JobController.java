@@ -2,23 +2,14 @@ package org.kainos.ea.team2.resources;
 
 import io.swagger.annotations.Api;
 import org.kainos.ea.team2.api.JobService;
-import org.kainos.ea.team2.db.DatabaseConnector;
 import org.kainos.ea.team2.db.JobDao;
 import org.kainos.ea.team2.exception.CouldNotGetJobsException;
-import org.kainos.ea.team2.exception.NoJobsAvailableException;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.PATCH;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.crypto.Data;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("/api")
 @Api("Moves Like Swagger API")
@@ -31,7 +22,6 @@ public class JobController {
      * endpoint to get list of jobs from database.
      * @return Response with appropriate status code and body.
      * Status code 200 if request successful and list non-empty.
-     * Status code 404 if request successful and list empty.
      * Status code 500 if internal server error.
      */
     @GET
@@ -44,9 +34,6 @@ public class JobController {
         } catch (CouldNotGetJobsException e) {
             // status code 500 if internal server error
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-        } catch (NoJobsAvailableException e) {
-            // status code 404 if job list returned is empty
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
 }
