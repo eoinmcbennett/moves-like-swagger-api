@@ -16,9 +16,8 @@ public class JobDao {
         // create list to add jobs returned from db
         List<Job> jobList = new ArrayList<>();
 
-        // establish connection with db
-        try(Connection c = DatabaseConnector.getConnection()){
-
+        try {
+            Connection c = DatabaseConnector.getConnection();
             // sql string
             String sqlString = "SELECT job_id, job_name FROM JobRoles;";
 
