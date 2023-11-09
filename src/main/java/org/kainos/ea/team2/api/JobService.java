@@ -1,6 +1,7 @@
 package org.kainos.ea.team2.api;
 
 import org.kainos.ea.team2.cli.Job;
+import org.kainos.ea.team2.db.IJobDAO;
 import org.kainos.ea.team2.db.JobDao;
 import org.kainos.ea.team2.exception.CouldNotGetJobsException;
 import org.kainos.ea.team2.exception.NoJobsAvailableException;
@@ -8,9 +9,11 @@ import org.kainos.ea.team2.exception.NoJobsAvailableException;
 import java.util.List;
 
 public class JobService {
+    private IJobDAO jobDao;
 
-    // create instance of job dao class
-    JobDao jobDao = new JobDao();
+    public JobService(IJobDAO jobDao){
+        this.jobDao = jobDao;
+    }
 
     /**
      * calls to dao to return a list of jobs from database.

@@ -3,6 +3,7 @@ package org.kainos.ea.team2.resources;
 import io.swagger.annotations.Api;
 import org.kainos.ea.team2.api.JobService;
 import org.kainos.ea.team2.db.DatabaseConnector;
+import org.kainos.ea.team2.db.JobDao;
 import org.kainos.ea.team2.exception.CouldNotGetJobsException;
 import org.kainos.ea.team2.exception.NoJobsAvailableException;
 
@@ -24,7 +25,7 @@ import java.util.List;
 public class JobController {
 
     // create instance of jobs service class
-    JobService jobService = new JobService();
+    JobService jobService = new JobService(new JobDao());
 
     /**
      * endpoint to get list of jobs from database.

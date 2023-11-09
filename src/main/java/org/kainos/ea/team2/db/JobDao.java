@@ -10,7 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobDao {
+public class JobDao implements IJobDAO {
+    @Override
     public List<Job> getJobs() throws CouldNotGetJobsException {
 
         // create list to add jobs returned from db
