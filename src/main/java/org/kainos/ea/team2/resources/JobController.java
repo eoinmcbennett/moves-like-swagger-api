@@ -1,7 +1,10 @@
 package org.kainos.ea.team2.resources;
 
 import io.swagger.annotations.Api;
+import org.kainos.ea.team2.api.JobService;
 import org.kainos.ea.team2.db.DatabaseConnector;
+import org.kainos.ea.team2.exception.CouldNotGetJobsException;
+import org.kainos.ea.team2.exception.NoJobsAvailableException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
@@ -20,23 +23,29 @@ import java.util.List;
 @Api("Moves Like Swagger API")
 public class JobController {
 
+    // create instance of jobs service class
+    JobService jobService = new JobService();
+
+    /**
+     * endpoint to get list of jobs from database.
+     * @return Response with appropriate status code and body.
+     * Status code 200 if request successful and list non-empty.
+     * Status code 404 if request successful and list empty.
+     * Status code 500 if internal server error.
+     */
     @GET
-    @Path("/jobs")
+    @Path("/job-roles")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getJobs() {
         try {
-            Connection conn = DatabaseConnector.getConnection();
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT job_name FROM JobRoles");
-            List<String> jobs = new ArrayList<String>();
-
-            while(rs.next()){
-                jobs.add(rs.getString("job_name"));
-            }
-
-            return Response.ok().entity(jobs).build();
-        } catch(Exception e){
-            return Response.serverError().entity(e.getMessage()).build();
+            // call to jobs service to return list of jobs
+            return Response.status(Response.Status.OK).entity(jobService.getJobs()).build();
+        } catch (CouldNotGetJobsException e) {
+            // status code 500 if internal server error
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } catch (NoJobsAvailableException e) {
+            // status code 404 if job list returned is empty
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
 }
