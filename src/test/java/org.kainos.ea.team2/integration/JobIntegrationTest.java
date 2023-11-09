@@ -1,17 +1,23 @@
 package org.kainos.ea.team2.integration;
 
-import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
-import io.dropwizard.testing.junit5.DropwizardAppExtension;
-import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.kainos.ea.team2.MovesLikeSwaggerApplication;
 import org.kainos.ea.team2.MovesLikeSwaggerConfiguration;
 import org.kainos.ea.team2.cli.Job;
 
+import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
+import io.dropwizard.testing.junit5.DropwizardAppExtension;
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import java.util.List;
 
+
+/**
+ * integration testing, verifies that the job controller, job service and job dao communicate properly.
+ */
 @ExtendWith(DropwizardExtensionsSupport.class)
 public class JobIntegrationTest {
 
@@ -22,7 +28,7 @@ public class JobIntegrationTest {
 
 
     /**
-     * testing that the getJobs method returns a list of jobs from the database
+     * testing that the getJobs method returns a list of jobs from the database.
      */
     @Test
     void getJobs_shouldReturnListOfJobs() {
@@ -35,5 +41,4 @@ public class JobIntegrationTest {
         // check that the list of jobs is non empty
         Assertions.assertTrue(response.size() > 0);
      }
-
     }
