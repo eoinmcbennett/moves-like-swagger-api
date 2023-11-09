@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 public class JobController {
 
     // create instance of jobs service class
-    JobService jobService = new JobService(new JobDao());
+    private final JobService jobService = new JobService(new JobDao());
 
     /**
      * endpoint to get list of jobs from database.

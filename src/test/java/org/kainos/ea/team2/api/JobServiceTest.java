@@ -16,8 +16,8 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class JobServiceTest {
 
-    private static final IJobDAO jobDao = Mockito.mock(JobDao.class);
-    private static final JobService jobService = new JobService(jobDao);
+    private final IJobDAO jobDao = Mockito.mock(JobDao.class);
+    private final JobService jobService = new JobService(jobDao);
 
     @Test
     void whenGetJobsCalled_jobServicesReturnsListOfJobs() throws CouldNotGetJobsException {
