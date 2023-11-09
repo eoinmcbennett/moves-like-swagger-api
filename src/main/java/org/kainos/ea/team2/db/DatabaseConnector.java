@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DatabaseConnector {
+public abstract class DatabaseConnector {
     private static Connection conn;
 
     public static Connection getConnection() throws SQLException, IllegalArgumentException {

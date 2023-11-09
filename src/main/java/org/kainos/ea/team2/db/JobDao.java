@@ -11,16 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JobDao {
-
-    // create new instance of db connector class
-    DatabaseConnector databaseConnector = new DatabaseConnector();
     public List<Job> getJobs() throws CouldNotGetJobsException {
 
         // create list to add jobs returned from db
         List<Job> jobList = new ArrayList<>();
 
         // establish connection with db
-        try(Connection c = databaseConnector.getConnection()){
+        try(Connection c = DatabaseConnector.getConnection()){
 
             // sql string
             String sqlString = "SELECT job_id, job_name FROM JobRoles;";
