@@ -34,8 +34,11 @@ How to start the moves-like-swagger-api application
 
 Swagger
 ---
-
 To see your applications Swagger UI `http://localhost:8080/swagger`
+
+Linting
+---
+In order to check your code with the linter locally. Run `mvn checkstyle:check -e` and address anything in the output
 
 Tests
 ---
