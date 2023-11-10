@@ -171,6 +171,21 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.3.0</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <failOnViolation>true</failOnViolation>
+                    <violationSeverity>warning</violationSeverity>
+                    <configLocation>google_checks.yml</configLocation>
+                    <failsOnError>true</failsOnError>
+                    <enableFilesSummary>true</enableFilesSummary>
+                    <enableRulesSummary>true</enableRulesSummary>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
+
+            </plugin>
         </plugins>
     </reporting>
     <profiles>
