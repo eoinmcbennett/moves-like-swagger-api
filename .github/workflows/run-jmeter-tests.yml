@@ -2,13 +2,29 @@ on: [push]
 jobs:
   Main:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Run JMeter Tests
-        uses: QAInsights/PerfAction@v3.1
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
         with:
-          test-plan-path: jmeter-files/test-plan.jmx
-          args: ""
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Download JMeter
+        run: |
+          curl -L https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.1.tgz | tar xz
+          export PATH=$PATH:$PWD/apache-jmeter-5.4.1/bin
+
+      - name: Run JMeter Tests
+        run: jmeter -n -t jmeter-files/test-plan.jmx -l result.jtl
+
+      - name: Unset JMeter PATH
+        run: export PATH="${PATH%:$PWD/apache-jmeter-5.4.1/bin}"
+
       - name: Upload Results
         uses: actions/upload-artifact@v2
         with:
