@@ -36,6 +36,11 @@ public class JobController {
                     entity(jobService.getJobs()).build();
         } catch (CouldNotGetJobsException e) {
             // status code 500 if internal server error
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                    entity(e.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging purposes
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
                     entity(e.getMessage()).build();
         }
