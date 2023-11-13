@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 
@@ -35,12 +34,11 @@ public class JobIntegrationTest {
     void getJobs_shouldReturnListOfJobs() {
 
         // list of employees, add each employee returned from the db
-        Response response = APP.client().target("http://localhost:8080/api/job-roles")
-                .request().get();
-                //.get(List.class);
+        List<Job> response = APP.client().target("http://localhost:8080/api/job-roles")
+                .request().get(List.class);
 
         // check that the list of jobs is non-empty
-        //Assertions.assertTrue(response.size() > 0);
+        Assertions.assertTrue(response.size() > 0);
 
      }
     }
