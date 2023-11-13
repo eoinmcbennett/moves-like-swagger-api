@@ -38,6 +38,9 @@ public class JobController {
             // status code 500 if internal server error
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
                     entity(e.getMessage()).build();
+        } catch (Exception exception ) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                    entity(exception.getMessage()).build();
         }
     }
 }
