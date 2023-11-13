@@ -18,6 +18,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dropwizard.version>2.0.23</dropwizard.version>
         <mainClass>org.kainos.ea.team2.MovesLikeSwaggerApplication</mainClass>
+        <checkstyle.suppressions.location>checkstyle-suppressions.xml</checkstyle.suppressions.location>
     </properties>
 
     <dependencyManagement>
@@ -179,6 +180,7 @@
                     <enableFilesSummary>true</enableFilesSummary>
                     <enableRulesSummary>true</enableRulesSummary>
                     <consoleOutput>true</consoleOutput>
+                    <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
                 </configuration>
 
             </plugin>
