@@ -1,7 +1,5 @@
 package org.kainos.ea.team2.db;
 
-import io.fusionauth.jwt.domain.JWT;
-import org.kainos.ea.team2.cli.BasicCredentials;
 import org.kainos.ea.team2.cli.HashedPassword;
 import org.kainos.ea.team2.client.AuthenticationException;
 
@@ -16,6 +14,6 @@ public interface IAuthenticationSource {
      * @return byte[] of the users hashed password or null if none exists
      * @throws AuthenticationException thrown for non-user error
      */
-    HashedPassword getHashedPasswordForUser(String username) throws AuthenticationException;
-
+    HashedPassword getHashedPasswordForUser(String username)
+            throws AuthenticationException;
 }
