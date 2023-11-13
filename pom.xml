@@ -164,24 +164,20 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*IntegrationTest.java</exclude>
-                    </excludes>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>integration-test</id>
+                        <id>test</id>
                         <goals>
                             <goal>test</goal>
                         </goals>
-                        <phase>integration-test</phase>
+                        <phase>test</phase>
                         <configuration>
                             <excludes>
                                 <exclude>none</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
+                                <include>**/*JobServiceTest.java</include>
                             </includes>
                         </configuration>
                     </execution>

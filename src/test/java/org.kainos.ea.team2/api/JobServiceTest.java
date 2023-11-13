@@ -29,6 +29,9 @@ public class JobServiceTest {
     // create instance of job service class (being tested)
     private static JobService jobService;
 
+    /**
+     * Initialise variables before each test is run.
+     */
     @BeforeEach
     void setupVars(){
         // create mock instance of jobdao class
