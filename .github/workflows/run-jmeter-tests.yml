@@ -18,13 +18,11 @@ jobs:
       - name: Download JMeter
         run: |
           curl -L https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.1.tgz | tar xz
-          export PATH=$PATH:$PWD/apache-jmeter-5.4.1/bin
+          export JMETER_HOME=$PWD/apache-jmeter-5.4.1
+          export PATH=$PATH:$JMETER_HOME/bin
 
       - name: Run JMeter Tests
         run: jmeter -n -t jmeter-files/test-plan.jmx -l result.jtl
-
-      - name: Unset JMeter PATH
-        run: export PATH="${PATH%:$PWD/apache-jmeter-5.4.1/bin}"
 
       - name: Upload Results
         uses: actions/upload-artifact@v2
