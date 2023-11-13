@@ -6,6 +6,8 @@ import org.kainos.ea.team2.api.AuthenticationService;
 import org.kainos.ea.team2.api.IAuthenticationService;
 import org.kainos.ea.team2.cli.BasicCredentials;
 import org.kainos.ea.team2.client.AuthenticationException;
+import org.kainos.ea.team2.client.BasicCredentialValidator;
+import org.kainos.ea.team2.client.IValidator;
 import org.kainos.ea.team2.db.DBAuthenticationSource;
 
 import javax.ws.rs.POST;
@@ -21,10 +23,26 @@ public class AuthController {
     private static final String JWT_SECRET = System.getenv("JWT_SECRET");
 
     /**
+     * Validator for basic credentials.
+     */
+    private final IValidator<BasicCredentials> basicCredentialValidator;
+
+    /**
      * The authentication service implementation to use.
      */
-    private final IAuthenticationService authService =
-            new AuthenticationService(new DBAuthenticationSource(), JWT_SECRET);
+    private final IAuthenticationService authService;
+
+    /**
+     * Creates a new auth controller instance.
+     */
+    public AuthController() {
+        this.basicCredentialValidator = new BasicCredentialValidator();
+        this.authService = new AuthenticationService(
+                new DBAuthenticationSource(),
+                JWT_SECRET,
+                this.basicCredentialValidator
+        );
+    }
 
     /**
      * Attempts to get a JWT for the user.

@@ -8,12 +8,11 @@ import io.fusionauth.jwt.hmac.HMACVerifier;
 import org.kainos.ea.team2.cli.BasicCredentials;
 import org.kainos.ea.team2.cli.HashedPassword;
 import org.kainos.ea.team2.client.AuthenticationException;
+import org.kainos.ea.team2.client.IValidator;
 import org.kainos.ea.team2.db.IAuthenticationSource;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -53,18 +52,26 @@ public class AuthenticationService implements IAuthenticationService {
      */
     private final Verifier jwtVerifier;
 
+    /**
+     * Validates basic credentials.
+     */
+    private final IValidator<BasicCredentials> validator;
+
 
     /**
      * Creates a new instance of this service.
      * @param authSource The source to pull credentials from.
      * @param jwtSecret The secret used to sign and verify JWTs
+     * @param validator the validator to use for credentials.
      */
     public AuthenticationService(
             final IAuthenticationSource authSource,
-            final String jwtSecret) {
+            final String jwtSecret,
+            final IValidator<BasicCredentials> validator) {
         this.authSource = authSource;
         this.jwtSigner = HMACSigner.newSHA256Signer(jwtSecret);
         this.jwtVerifier = HMACVerifier.newVerifier(jwtSecret);
+        this.validator = validator;
     }
 
     /**
@@ -73,21 +80,24 @@ public class AuthenticationService implements IAuthenticationService {
      * @param salt the salt used in the hash.
      * @param iterations the number of iterations used in the hash.
      * @return byte[] representing the hash.
-     * @throws NoSuchAlgorithmException Thrown if algorithm doesn't exist.
-     * @throws InvalidKeySpecException Thrown if hash generation fails.
+     * @throws AuthenticationException throw if hashing fails
      */
     private byte[] getPasswordHash(
             final String password,
             final byte[] salt,
             final int iterations)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
+            throws AuthenticationException {
 
-        final char[] passwordChars = password.toCharArray();
-        KeySpec spec =
-                new PBEKeySpec(passwordChars, salt, iterations, KEY_LENGTH);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance(HASH_ALG);
+      try {
+          final char[] passwordChars = password.toCharArray();
+          KeySpec spec =
+                  new PBEKeySpec(passwordChars, salt, iterations, KEY_LENGTH);
+          SecretKeyFactory factory = SecretKeyFactory.getInstance(HASH_ALG);
 
-        return factory.generateSecret(spec).getEncoded();
+          return factory.generateSecret(spec).getEncoded();
+      } catch (Exception e) {
+          throw new AuthenticationException(e.getMessage());
+      }
     }
 
     /**
@@ -100,6 +110,12 @@ public class AuthenticationService implements IAuthenticationService {
     public JWT authenticate(
             final BasicCredentials credentials)
             throws AuthenticationException {
+
+        String error = validator.validate(credentials);
+        if (error != null) {
+            throw new AuthenticationException(error);
+        }
+
         HashedPassword hashedPassword =
                 authSource.getHashedPasswordForUser(credentials.getUsername());
 
@@ -108,19 +124,14 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         //re hash the provided password and add the existing salt
-        byte[] credentialHash = null;
-        try {
-            String password = credentials.getPassword();
-            byte[] salt = hashedPassword.getSalt();
-            int iterations = hashedPassword.getIterations();
-            credentialHash = getPasswordHash(password, salt, iterations);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new AuthenticationException(e.getMessage());
-        }
+        String password = credentials.getPassword();
+        byte[] salt = hashedPassword.getSalt();
+        int iterations = hashedPassword.getIterations();
+        byte[] credentialHash = getPasswordHash(password, salt, iterations);
 
-        byte[] pwordHash = hashedPassword.getHashedPassword();
+        byte[] passwordHash = hashedPassword.getHashedPassword();
 
-        if (!Arrays.equals(credentialHash, pwordHash)) {
+        if (!Arrays.equals(credentialHash, passwordHash)) {
             return null;
         }
 
