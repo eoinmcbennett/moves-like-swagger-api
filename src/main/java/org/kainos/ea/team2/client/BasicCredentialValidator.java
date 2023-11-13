@@ -24,6 +24,14 @@ public class BasicCredentialValidator implements IValidator<BasicCredentials> {
             return "The username is null";
         }
 
+        if (credential.getUsername().isEmpty()) {
+            return "the usernames is an empty string";
+        }
+
+        if (credential.getPassword().isEmpty()) {
+            return "the password is an empty string";
+        }
+
         return null;
     }
 }

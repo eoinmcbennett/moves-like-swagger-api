@@ -8,6 +8,7 @@ import org.kainos.ea.team2.cli.BasicCredentials;
 import org.kainos.ea.team2.client.AuthenticationException;
 import org.kainos.ea.team2.client.BasicCredentialValidator;
 import org.kainos.ea.team2.client.IValidator;
+import org.kainos.ea.team2.client.ValidationException;
 import org.kainos.ea.team2.db.DBAuthenticationSource;
 
 import javax.ws.rs.POST;
@@ -65,6 +66,12 @@ public class AuthController {
         } catch (AuthenticationException e) {
             System.err.println(e.getMessage());
             return Response.serverError().build();
+        } catch (ValidationException e) {
+            System.err.println(e);
+
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(e.getMessage())
+                .build();
         }
     }
 }

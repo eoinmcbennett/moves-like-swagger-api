@@ -3,6 +3,7 @@ package org.kainos.ea.team2.api;
 import io.fusionauth.jwt.domain.JWT;
 import org.kainos.ea.team2.cli.BasicCredentials;
 import org.kainos.ea.team2.client.AuthenticationException;
+import org.kainos.ea.team2.client.ValidationException;
 
 /**
  * Describes the methods needed by an authentication service.
@@ -15,7 +16,7 @@ public interface IAuthenticationService {
      * @throws AuthenticationException Thrown on non-user error
      */
     JWT authenticate(BasicCredentials credentials)
-            throws AuthenticationException;
+            throws AuthenticationException, ValidationException;
 
     /**
      * Attempts to validate a passed in JWT.

@@ -9,6 +9,7 @@ import org.kainos.ea.team2.cli.BasicCredentials;
 import org.kainos.ea.team2.cli.HashedPassword;
 import org.kainos.ea.team2.client.AuthenticationException;
 import org.kainos.ea.team2.client.IValidator;
+import org.kainos.ea.team2.client.ValidationException;
 import org.kainos.ea.team2.db.IAuthenticationSource;
 
 import javax.crypto.SecretKeyFactory;
@@ -68,6 +69,10 @@ public class AuthenticationService implements IAuthenticationService {
             final IAuthenticationSource authSource,
             final String jwtSecret,
             final IValidator<BasicCredentials> validator) {
+        if (jwtSecret == null) {
+            throw new IllegalArgumentException("JWT_SECRET NOT SET");
+        }
+
         this.authSource = authSource;
         this.jwtSigner = HMACSigner.newSHA256Signer(jwtSecret);
         this.jwtVerifier = HMACVerifier.newVerifier(jwtSecret);
@@ -104,16 +109,17 @@ public class AuthenticationService implements IAuthenticationService {
      * Attempts to generate a JWT with the credential provided.
      * @param credentials the credentials to authenticate.
      * @return JWT if successful, null if failed.
-     * @throws AuthenticationException Thrown on validation error.
+     * @throws AuthenticationException Thrown on server error.
+     * @throws ValidationException Thrown on validation error
      */
     @Override
     public JWT authenticate(
             final BasicCredentials credentials)
-            throws AuthenticationException {
+            throws AuthenticationException, ValidationException {
 
         String error = validator.validate(credentials);
         if (error != null) {
-            throw new AuthenticationException(error);
+            throw new ValidationException(error);
         }
 
         HashedPassword hashedPassword =

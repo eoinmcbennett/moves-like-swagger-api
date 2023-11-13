@@ -1,6 +1,5 @@
 package org.kainos.ea.team2.api;
 
-
 import io.fusionauth.jwt.domain.JWT;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,6 +9,7 @@ import org.kainos.ea.team2.cli.HashedPassword;
 import org.kainos.ea.team2.client.AuthenticationException;
 import org.kainos.ea.team2.client.BasicCredentialValidator;
 import org.kainos.ea.team2.client.IValidator;
+import org.kainos.ea.team2.client.ValidationException;
 import org.kainos.ea.team2.db.IAuthenticationSource;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -53,7 +53,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    void authSource_testLoginSuccessful_whenValidCredentialsGiven() throws AuthenticationException {
+    void authSource_testLoginSuccessful_whenValidCredentialsGiven() throws AuthenticationException, ValidationException {
         IAuthenticationSource authenticationSource = Mockito.mock(IAuthenticationSource.class);
         IAuthenticationService authService = new AuthenticationService(authenticationSource, JWT_SECRET, validator);
 
@@ -93,7 +93,7 @@ public class AuthServiceTest {
 
         BasicCredentials credentials = new BasicCredentials("test",null);
 
-        Assertions.assertThrows(AuthenticationException.class,() -> {
+        Assertions.assertThrows(ValidationException.class,() -> {
             authService.authenticate(credentials);
         });
     }
@@ -105,7 +105,7 @@ public class AuthServiceTest {
 
         BasicCredentials credentials = new BasicCredentials(null,"testing");
 
-        Assertions.assertThrows(AuthenticationException.class,() -> {
+        Assertions.assertThrows(ValidationException.class,() -> {
             authService.authenticate(credentials);
         });
     }
@@ -117,13 +117,14 @@ public class AuthServiceTest {
 
         BasicCredentials credentials = null;
 
-        Assertions.assertThrows(AuthenticationException.class,() -> {
+        Assertions.assertThrows(ValidationException.class,() -> {
             authService.authenticate(credentials);
         });
     }
 
-    @Test
-    void authService_testLoginUnsuccessful_whenUserNameNotFound() throws AuthenticationException {
+  @Test
+  void authService_testLoginUnsuccessful_whenUserNameNotFound()
+      throws AuthenticationException, ValidationException {
         IAuthenticationSource authenticationSource = Mockito.mock(IAuthenticationSource.class);
         IAuthenticationService authService = new AuthenticationService(authenticationSource, JWT_SECRET, validator);
 
@@ -151,8 +152,9 @@ public class AuthServiceTest {
         });
     }
 
-    @Test
-    void authService_testLoginUnsuccessful_whenHashedPasswordHasInvalidSalt() throws AuthenticationException {
+  @Test
+  void authService_testLoginUnsuccessful_whenHashedPasswordHasInvalidSalt()
+      throws AuthenticationException, ValidationException {
         IAuthenticationSource authenticationSource = Mockito.mock(IAuthenticationSource.class);
         IAuthenticationService authService = new AuthenticationService(authenticationSource, JWT_SECRET, validator);
 
@@ -170,8 +172,9 @@ public class AuthServiceTest {
         Assertions.assertNull(authService.authenticate(credentials));
     }
 
-    @Test
-    void authSource_testVerificationSuccessful_whenValidTokenGiven() throws AuthenticationException {
+  @Test
+  void authSource_testVerificationSuccessful_whenValidTokenGiven()
+      throws AuthenticationException, ValidationException {
         IAuthenticationSource authenticationSource = Mockito.mock(IAuthenticationSource.class);
         IAuthenticationService authService = new AuthenticationService(authenticationSource, JWT_SECRET, validator);
 
@@ -191,8 +194,9 @@ public class AuthServiceTest {
         Assertions.assertTrue(authService.validate(signedToken));
     }
 
-    @Test
-    void authSource_testTokenSigned_whenValidTokenPassed() throws AuthenticationException {
+  @Test
+  void authSource_testTokenSigned_whenValidTokenPassed()
+    throws AuthenticationException, ValidationException {
         IAuthenticationSource authenticationSource = Mockito.mock(IAuthenticationSource.class);
         IAuthenticationService authService = new AuthenticationService(authenticationSource, JWT_SECRET, validator);
 
@@ -210,5 +214,5 @@ public class AuthServiceTest {
         String signedToken = authService.sign(userToken);
 
         Assertions.assertNotNull(signedToken);
-    }
+     }
 }
