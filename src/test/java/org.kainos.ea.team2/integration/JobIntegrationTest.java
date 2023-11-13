@@ -28,7 +28,7 @@ public class JobIntegrationTest {
 
 
     /**
-     * testing that the getJobs method returns a list of jobs from the database.
+     * Verify that the getJobs method returns a list of jobs from the database.
      */
     @Test
     void getJobs_shouldReturnListOfJobs() {
@@ -38,7 +38,7 @@ public class JobIntegrationTest {
                 .request()
                 .get(List.class);
 
-        // check that the list of jobs is non empty
+        // check that the list of jobs is non-empty
         Assertions.assertTrue(response.size() > 0);
      }
     }

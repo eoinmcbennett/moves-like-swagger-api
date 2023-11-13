@@ -11,6 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JobDao implements IJobDAO {
+
+    /**
+     * Calls to the dao to return a list of jobs
+     * from the job table in the database.
+     * @return list of jobs
+     * @throws CouldNotGetJobsException if a sql error is thrown.
+     */
     @Override
     public List<Job> getJobs() throws CouldNotGetJobsException {
 
@@ -18,7 +25,9 @@ public class JobDao implements IJobDAO {
         List<Job> jobList = new ArrayList<>();
 
         try {
+            // establish connection with database
             Connection c = DatabaseConnector.getConnection();
+
             // sql string
             String sqlString = "SELECT job_id, job_name FROM JobRoles;";
 
@@ -29,9 +38,10 @@ public class JobDao implements IJobDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             // add each returned row to jobList
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 // create new job
-                Job job = new Job(resultSet.getInt("job_id"), resultSet.getString("job_name"));
+                Job job = new Job(resultSet.getInt("job_id"),
+                        resultSet.getString("job_name"));
                 // add new job to list
                 jobList.add(job);
             }
@@ -40,6 +50,7 @@ public class JobDao implements IJobDAO {
             return jobList;
 
         } catch (SQLException e) {
+            // throw could not get jobs exception if sql exception is caught
             throw new CouldNotGetJobsException();
         }
     }
