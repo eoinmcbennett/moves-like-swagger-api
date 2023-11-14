@@ -30,7 +30,7 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT ob_id, job_name FROM JobRoles;";
+            String sqlString = "SELECT job_id, job_name FROM JobRoles;";
 
             // prepare sql statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);
@@ -71,7 +71,7 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT ob_specification, sharepoint_link "
+            String sqlString = "SELECT job_specification, sharepoint_link "
                     + "FROM JobRoles WHERE job_id = ?;";
 
             // prepare statement
