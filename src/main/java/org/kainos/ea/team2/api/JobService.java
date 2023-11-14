@@ -13,14 +13,14 @@ public class JobService {
     /**
      * create instance of job dao interface.
      */
-    private IJobDAO instanceJobDao;
+    private IJobDAO jobDao;
 
     /**
      * create instance of jobservice class using jobdao interface.
      * @param jobDao
      */
     public JobService(final IJobDAO jobDao) {
-        this.instanceJobDao = jobDao;
+        this.jobDao = jobDao;
     }
 
     /**
@@ -31,7 +31,7 @@ public class JobService {
     public List<Job> getJobs() throws FailedToGetException {
 
         // call to job dao
-        return instanceJobDao.getJobs();
+        return jobDao.getJobs();
     }
 
     /**
@@ -48,7 +48,7 @@ public class JobService {
 
         // call to dao to get job spec with given job id
         JobSpecificationResponse jobSpecificationResponse =
-                instanceJobDao.getJobSpec(id);
+                jobDao.getJobSpec(id);
 
         // if dao returns null, throw job does not exist exception
         if (jobSpecificationResponse == null) {

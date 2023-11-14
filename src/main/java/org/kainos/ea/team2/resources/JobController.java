@@ -61,10 +61,10 @@ public class JobController {
                     entity(jobService.getJobSpec(id)).build();
         } catch (FailedToGetException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
-                    entity("Failed to get job.").build();
+                    entity(e.getMessage()).build();
         } catch (JobDoesNotExistException e) {
             return Response.status(Response.Status.NOT_FOUND).
-                    entity("Job does not exist.").build();
+                    entity(e.getMessage()).build();
         }
     }
 }

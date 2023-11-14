@@ -30,7 +30,7 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT job_id, job_name FROM JobRoles;";
+            String sqlString = "SELECT ob_id, job_name FROM JobRoles;";
 
             // prepare sql statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);
@@ -52,7 +52,7 @@ public class JobDao implements IJobDAO {
 
         } catch (SQLException e) {
             // throw could not get jobs exception if sql exception is caught
-            throw new FailedToGetException();
+            throw new FailedToGetException("Failed to get jobs.");
         }
     }
 
@@ -71,7 +71,7 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT job_specification, sharepoint_link "
+            String sqlString = "SELECT ob_specification, sharepoint_link "
                     + "FROM JobRoles WHERE job_id = ?;";
 
             // prepare statement
@@ -94,7 +94,7 @@ public class JobDao implements IJobDAO {
             return null;
 
         } catch (SQLException e) {
-            throw new FailedToGetException();
+            throw new FailedToGetException("Failed to get job.");
         }
     }
 }
