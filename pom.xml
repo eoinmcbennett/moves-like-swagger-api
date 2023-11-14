@@ -6,18 +6,19 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.kainos.ea</groupId>
-    <artifactId>JavaWebService</artifactId>
+    <groupId>org.kainos.ea.team2</groupId>
+    <artifactId>moves-like-swagger-api</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>WebService</name>
+    <name>MovesLikeSwagger</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dropwizard.version>2.0.23</dropwizard.version>
-        <mainClass>com.kainos.ea.WebServiceApplication</mainClass>
+        <mainClass>org.kainos.ea.team2.MovesLikeSwaggerApplication</mainClass>
+        <checkstyle.suppressions.location>checkstyle-suppressions.xml</checkstyle.suppressions.location>
     </properties>
 
     <dependencyManagement>
@@ -163,24 +164,20 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*IntegrationTest.java</exclude>
-                    </excludes>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>integration-test</id>
+                        <id>test</id>
                         <goals>
                             <goal>test</goal>
                         </goals>
-                        <phase>integration-test</phase>
+                        <phase>test</phase>
                         <configuration>
                             <excludes>
                                 <exclude>none</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
+                                <include>**/*JobServiceTest.java</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -226,6 +223,22 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <failOnViolation>true</failOnViolation>
+                    <violationSeverity>warning</violationSeverity>
+                    <configLocation>google_checks.yml</configLocation>
+                    <failsOnError>true</failsOnError>
+                    <enableFilesSummary>true</enableFilesSummary>
+                    <enableRulesSummary>true</enableRulesSummary>
+                    <consoleOutput>true</consoleOutput>
+                    <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                </configuration>
+
             </plugin>
         </plugins>
     </reporting>

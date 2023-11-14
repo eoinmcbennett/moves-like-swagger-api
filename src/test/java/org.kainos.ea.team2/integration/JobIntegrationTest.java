@@ -28,17 +28,17 @@ public class JobIntegrationTest {
 
 
     /**
-     * testing that the getJobs method returns a list of jobs from the database.
+     * Verify that the getJobs method returns a list of jobs from the database.
      */
     @Test
     void getJobs_shouldReturnListOfJobs() {
 
         // list of employees, add each employee returned from the db
         List<Job> response = APP.client().target("http://localhost:8080/api/job-roles")
-                .request()
-                .get(List.class);
+                .request().get(List.class);
 
-        // check that the list of jobs is non empty
+        // check that the list of jobs is non-empty
         Assertions.assertTrue(response.size() > 0);
+
      }
     }

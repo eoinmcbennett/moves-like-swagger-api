@@ -14,9 +14,9 @@ import javax.ws.rs.core.Response;
 @Path("/api")
 @Api("Moves Like Swagger API")
 public class JobController {
-
     // create instance of jobs service class
     private final JobService jobService = new JobService(new JobDao());
+
 
     /**
      * endpoint to get list of jobs from database.
@@ -30,10 +30,12 @@ public class JobController {
     public Response getJobs() {
         try {
             // call to jobs service to return list of jobs
-            return Response.status(Response.Status.OK).entity(jobService.getJobs()).build();
+            return Response.status(Response.Status.OK).
+                    entity(jobService.getJobs()).build();
         } catch (CouldNotGetJobsException e) {
             // status code 500 if internal server error
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                    entity(e.getMessage()).build();
         }
     }
 }
