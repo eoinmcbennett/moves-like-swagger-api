@@ -1,7 +1,8 @@
 package org.kainos.ea.team2.db;
 
 import org.kainos.ea.team2.cli.Job;
-import org.kainos.ea.team2.exception.CouldNotGetJobsException;
+import org.kainos.ea.team2.cli.JobSpecificationResponse;
+import org.kainos.ea.team2.exception.FailedToGetException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,10 +17,10 @@ public class JobDao implements IJobDAO {
      * Calls to the dao to return a list of jobs
      * from the job table in the database.
      * @return list of jobs
-     * @throws CouldNotGetJobsException if a sql error is thrown.
+     * @throws FailedToGetException if a sql error is thrown.
      */
     @Override
-    public List<Job> getJobs() throws CouldNotGetJobsException {
+    public List<Job> getJobs() throws FailedToGetException {
 
         // create list to add jobs returned from db
         List<Job> jobList = new ArrayList<>();
@@ -51,7 +52,49 @@ public class JobDao implements IJobDAO {
 
         } catch (SQLException e) {
             // throw could not get jobs exception if sql exception is caught
-            throw new CouldNotGetJobsException();
+            throw new FailedToGetException();
+        }
+    }
+
+    /**
+     * Calls to the dao to return job spec and sharepoint link
+     * from the job table in the database.
+     * @param id job id of returned job spec and sharepoint link
+     * @return JobSpecificationResponse
+     * @throws FailedToGetException if a sql error is thrown.
+     */
+    public JobSpecificationResponse getJobSpec(final int id)
+            throws FailedToGetException {
+
+        try {
+            // establish connection with db
+            Connection c = DatabaseConnector.getConnection();
+
+            // sql string
+            String sqlString = "SELECT job_specification, sharepoint_link "
+                    + "FROM JobRoles WHERE job_id = ?;";
+
+            // prepare statement
+            PreparedStatement preparedStatement = c.prepareStatement(sqlString);
+
+            // set placeholder to be job id passed into method
+            preparedStatement.setInt(1, id);
+
+            // execute query
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // create and return job spec response object with row returned
+            while (resultSet.next()) {
+                return new JobSpecificationResponse(
+                        resultSet.getString("job_specification"),
+                        resultSet.getString("sharepoint_link"));
+            }
+
+            // if no rows returned, return null
+            return null;
+
+        } catch (SQLException e) {
+            throw new FailedToGetException();
         }
     }
 }
