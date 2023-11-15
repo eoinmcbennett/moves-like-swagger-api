@@ -21,15 +21,22 @@ public class Job {
     private String jobName;
 
     /**
+     * The band level of the position
+     */
+    private BandLevel bandLevel;
+
+    /**
      * constructor with args - creates a job with a job id and job name.
      * @param jobId
      * @param jobName
      */
     @JsonCreator
     public Job(@JsonProperty("jobId") final int jobId,
-               @JsonProperty("jobName") final String jobName) {
+               @JsonProperty("jobName") final String jobName,
+                @JsonProperty("bandLevel") final BandLevel bandLevel) {
         this.jobId = jobId;
         this.jobName = jobName;
+        this.bandLevel = bandLevel;
     }
 
     // getters and setters
@@ -64,5 +71,21 @@ public class Job {
      */
     public void setJobName(final String jobName) {
         this.jobName = jobName;
+    }
+
+    /**
+     * Gets the band level of the position
+     * @return the band level
+     */
+    public BandLevel getBandLevel() {
+        return this.bandLevel;
+    }
+
+    /**
+     * Sets the band level for the position
+     * @param bandLevel
+     */
+    public void setBandLevel(BandLevel bandLevel) {
+        this.bandLevel = bandLevel;
     }
 }

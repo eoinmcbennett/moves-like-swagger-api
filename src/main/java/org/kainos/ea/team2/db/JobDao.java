@@ -1,5 +1,6 @@
 package org.kainos.ea.team2.db;
 
+import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.exception.CouldNotGetJobsException;
 
@@ -29,7 +30,7 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT job_id, job_name FROM JobRoles;";
+            String sqlString = "SELECT job_id, job_name, bandlevel_id, band_name FROM JobRoles JOIN BandLevel USING(bandlevel_id);";
 
             // prepare sql statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);
@@ -39,10 +40,17 @@ public class JobDao implements IJobDAO {
 
             // add each returned row to jobList
             while (resultSet.next()) {
-                // create new job
-                Job job = new Job(resultSet.getInt("job_id"),
-                        resultSet.getString("job_name"));
-                // add new job to list
+                BandLevel level = new BandLevel(
+                    resultSet.getInt("bandlevel_id"),
+                    resultSet.getString("band_name")
+                );
+
+                Job job = new Job(
+                    resultSet.getInt("job_id"),
+                    resultSet.getString("job_name"),
+                    level
+                );
+
                 jobList.add(job);
             }
 
