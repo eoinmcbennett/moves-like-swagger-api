@@ -6,19 +6,22 @@ package org.kainos.ea.team2.cli;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Job object contains attributes of jobId and jobName.
+ */
 public class Job {
 
     // instance vars
 
     /**
+     * Name of job.
+     */
+    private String jobName;
+
+    /**
      * id of job.
      */
     private int jobId;
-
-    /**
-     * name of job.
-     */
-    private String jobName;
 
     /**
      * The band level of the position
@@ -42,6 +45,22 @@ public class Job {
     // getters and setters
 
     /**
+     * get name of job.
+     * @return String jobName
+     */
+    public String getJobName() {
+        return jobName;
+    }
+
+    /**
+     * set name of job.
+     * @param jobName String jobName
+     */
+    public void setJobName(final String jobName) {
+        this.jobName = jobName;
+    }
+
+    /**
      * get id of job.
      * @return jobId.
      */
@@ -57,21 +76,6 @@ public class Job {
         this.jobId = jobId;
     }
 
-    /**
-     * get name of job.
-     * @return jobId.
-     */
-    public String getJobName() {
-        return jobName;
-    }
-
-    /**
-     * set name of job.
-     * @param jobName
-     */
-    public void setJobName(final String jobName) {
-        this.jobName = jobName;
-    }
 
     /**
      * Gets the band level of the position
