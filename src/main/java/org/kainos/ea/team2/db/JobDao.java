@@ -30,7 +30,10 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT job_id, job_name FROM JobRoles;";
+            String sqlString = "SELECT job_id, job_name, "
+                    + "Capabilities.capability_name "
+                    + "FROM JobRoles INNER JOIN Capabilities ON "
+                    + "JobRoles.capability_id=Capabilities.capability_id;";
 
             // prepare sql statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);
@@ -42,7 +45,8 @@ public class JobDao implements IJobDAO {
             while (resultSet.next()) {
                 // create new job
                 Job job = new Job(resultSet.getInt("job_id"),
-                        resultSet.getString("job_name"));
+                        resultSet.getString("job_name"),
+                        resultSet.getString("capability_name"));
                 // add new job to list
                 jobList.add(job);
             }

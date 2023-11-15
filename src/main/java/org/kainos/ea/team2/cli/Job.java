@@ -21,15 +21,24 @@ public class Job {
     private String jobName;
 
     /**
+     * capability of job.
+     */
+    private String jobCapabilityName;
+
+    /**
      * constructor with args - creates a job with a job id and job name.
      * @param jobId
      * @param jobName
+     * @param jobCapabilityName
      */
     @JsonCreator
     public Job(@JsonProperty("jobId") final int jobId,
-               @JsonProperty("jobName") final String jobName) {
+               @JsonProperty("jobName") final String jobName,
+               @JsonProperty("capability_name")
+                   final String jobCapabilityName) {
         this.jobId = jobId;
         this.jobName = jobName;
+        this.jobCapabilityName = jobCapabilityName;
     }
 
     // getters and setters
@@ -64,5 +73,21 @@ public class Job {
      */
     public void setJobName(final String jobName) {
         this.jobName = jobName;
+    }
+
+    /**
+     * get capability of job.
+     * @return jobId.
+     */
+    public String getJobCapabilityName() {
+        return jobCapabilityName;
+    }
+
+    /**
+     * set capability of job.
+     * @param jobCapabilityName
+     */
+    public void setJobCapabilityName(final String jobCapabilityName) {
+        this.jobCapabilityName = jobCapabilityName;
     }
 }

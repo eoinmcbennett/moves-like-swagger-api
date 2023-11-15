@@ -53,8 +53,8 @@ public class JobServiceTest {
     void whenGetJobsCalled_jobServicesReturnsListOfJobs() throws FailedToGetException, SQLException {
 
         // create jobs
-        Job job1 = new Job(1, "Software Engineer");
-        Job job2 = new Job(2, "QA Tester");
+        Job job1 = new Job(1, "Software Engineer", "Engineering");
+        Job job2 = new Job(2, "QA Tester", "Engineering");
 
         // create array list of jobs
         List<Job> testJobs = new ArrayList<>();
