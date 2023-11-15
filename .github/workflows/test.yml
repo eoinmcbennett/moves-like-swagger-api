@@ -23,6 +23,6 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          TEST_VALID_USER: ${{ secrets.TEST_VALID_USERNAME }}
+          TEST_VALID_USERNAME: ${{ secrets.TEST_VALID_USERNAME }}
           TEST_VALID_PASSWORD: ${{ secrets.TEST_VALID_PASSWORD }}
         run: mvn test -DDB_HOST=${DB_HOST} -DDB_NAME=${DB_NAME} -DDB_USER=${DB_USER} -DDB_PASSWORD=${DB_PASSWORD} -DJWT_SECRET=${JWT_SECRET} -no-transfer-progress
