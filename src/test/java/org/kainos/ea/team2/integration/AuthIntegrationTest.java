@@ -23,12 +23,19 @@ public class AuthIntegrationTest {
             new ResourceConfigurationSourceProvider()
     );
 
+    private static final String VALID_USER_NAME = System.getenv("TEST_VALID_USERNAME");
+    private static final String VALID_USER_PASSWORD = System.getenv("TEST_VALID_PASSWORD");
+
     /**
      * Verify that logging in valid credentials gives back a valid JWT
      */
     @Test
     void login_shouldReturnValidJWT_whenValidCredentialsArePassed() {
-        BasicCredentials credentials = new BasicCredentials("test@kainos.com","testing");
+        if(VALID_USER_NAME == null || VALID_USER_PASSWORD == null){
+            Assertions.fail();
+        }
+        BasicCredentials credentials = new BasicCredentials(VALID_USER_NAME,VALID_USER_PASSWORD);
+        System.out.println(credentials.getUsername());
         Response response = APP.client().target("http://localhost:8080/api/login").request().post(Entity.json(credentials));
 
         Assertions.assertEquals(200, response.getStatus());
