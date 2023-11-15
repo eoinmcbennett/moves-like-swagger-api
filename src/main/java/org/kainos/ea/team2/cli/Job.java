@@ -3,12 +3,17 @@
  */
 package org.kainos.ea.team2.cli;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+/**
+ * Job object contains attributes of jobId and jobName.
+ */
 public class Job {
 
     // instance vars
+
+    /**
+     * Name of job.
+     */
+    private String jobName;
 
     /**
      * id of job.
@@ -16,23 +21,32 @@ public class Job {
     private int jobId;
 
     /**
-     * name of job.
-     */
-    private String jobName;
-
-    /**
-     * constructor with args - creates a job with a job id and job name.
+     * Constructor with args - creates a job with a name and id.
      * @param jobId
      * @param jobName
      */
-    @JsonCreator
-    public Job(@JsonProperty("jobId") final int jobId,
-               @JsonProperty("jobName") final String jobName) {
-        this.jobId = jobId;
+    public Job(final int jobId, final String jobName) {
         this.jobName = jobName;
+        this.jobId = jobId;
     }
 
     // getters and setters
+
+    /**
+     * get name of job.
+     * @return String jobName
+     */
+    public String getJobName() {
+        return jobName;
+    }
+
+    /**
+     * set name of job.
+     * @param jobName String jobName
+     */
+    public void setJobName(final String jobName) {
+        this.jobName = jobName;
+    }
 
     /**
      * get id of job.
@@ -50,19 +64,5 @@ public class Job {
         this.jobId = jobId;
     }
 
-    /**
-     * get name of job.
-     * @return jobId.
-     */
-    public String getJobName() {
-        return jobName;
-    }
 
-    /**
-     * set name of job.
-     * @param jobName
-     */
-    public void setJobName(final String jobName) {
-        this.jobName = jobName;
-    }
 }
