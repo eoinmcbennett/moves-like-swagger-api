@@ -10,9 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Job object contains attributes of jobId and jobName.
  */
 public class Job {
-
-    // instance vars
-
     /**
      * Name of job.
      */
@@ -24,14 +21,15 @@ public class Job {
     private int jobId;
 
     /**
-     * The band level of the position
+     * The band level of the position.
      */
     private BandLevel bandLevel;
 
     /**
      * constructor with args - creates a job with a job id and job name.
-     * @param jobId
-     * @param jobName
+     * @param jobId the id of the job
+     * @param jobName the name of the job
+     * @param bandLevel the band level for the job
      */
     @JsonCreator
     public Job(@JsonProperty("jobId") final int jobId,
@@ -41,8 +39,6 @@ public class Job {
         this.jobName = jobName;
         this.bandLevel = bandLevel;
     }
-
-    // getters and setters
 
     /**
      * get name of job.
@@ -70,15 +66,14 @@ public class Job {
 
     /**
      * set id of job.
-     * @param jobId
+     * @param jobId the id of the job
      */
     public void setJobId(final int jobId) {
         this.jobId = jobId;
     }
 
-
     /**
-     * Gets the band level of the position
+     * Gets the band level of the position.
      * @return the band level
      */
     public BandLevel getBandLevel() {
@@ -86,10 +81,10 @@ public class Job {
     }
 
     /**
-     * Sets the band level for the position
-     * @param bandLevel
+     * Sets the band level for the position.
+     * @param bandLevel the band level object to set
      */
-    public void setBandLevel(BandLevel bandLevel) {
+    public void setBandLevel(final BandLevel bandLevel) {
         this.bandLevel = bandLevel;
     }
 }

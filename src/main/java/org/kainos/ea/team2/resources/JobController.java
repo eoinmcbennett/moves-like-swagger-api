@@ -16,7 +16,9 @@ import javax.ws.rs.core.Response;
 @Path("/api")
 @Api("Moves Like Swagger API")
 public class JobController {
-    // create instance of jobs service class
+    /**
+     * Job service instance for the controller to use.
+     */
     private final JobService jobService = new JobService(new JobDao());
 
 

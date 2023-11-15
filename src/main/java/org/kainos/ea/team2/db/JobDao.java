@@ -31,7 +31,9 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT job_id, job_name, bandlevel_id, band_name FROM JobRoles JOIN BandLevel USING(bandlevel_id);";
+            String sqlString = "SELECT job_id, job_name, "
+                    + "bandlevel_id, band_name "
+                    + "FROM JobRoles JOIN BandLevel USING(bandlevel_id);";
 
             // prepare sql statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);
