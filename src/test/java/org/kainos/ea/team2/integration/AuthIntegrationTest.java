@@ -32,7 +32,7 @@ public class AuthIntegrationTest {
     @Test
     void login_shouldReturnValidJWT_whenValidCredentialsArePassed() {
         if(VALID_USER_NAME == null || VALID_USER_PASSWORD == null){
-            Assertions.fail();
+            throw new IllegalArgumentException("Test credential environment variables not set!");
         }
         BasicCredentials credentials = new BasicCredentials(VALID_USER_NAME,VALID_USER_PASSWORD);
         System.out.println(credentials.getUsername());
