@@ -6,6 +6,9 @@ package org.kainos.ea.team2.cli;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Job object contains attributes of jobId and jobName.
+ */
 public class Job {
 
     // instance vars
@@ -26,7 +29,7 @@ public class Job {
     private String jobCapabilityName;
 
     /**
-     * constructor with args - creates a job with a job id and job name.
+     * Constructor with args - creates a job with a name and id.
      * @param jobId
      * @param jobName
      * @param jobCapabilityName
@@ -41,7 +44,16 @@ public class Job {
         this.jobCapabilityName = jobCapabilityName;
     }
 
+
     // getters and setters
+
+    /**
+     * get name of job.
+     * @return String jobName
+     */
+    public String getJobName() {
+        return jobName;
+    }
 
     /**
      * get id of job.
@@ -57,14 +69,6 @@ public class Job {
      */
     public void setJobId(final int jobId) {
         this.jobId = jobId;
-    }
-
-    /**
-     * get name of job.
-     * @return jobId.
-     */
-    public String getJobName() {
-        return jobName;
     }
 
     /**
@@ -90,4 +94,5 @@ public class Job {
     public void setJobCapabilityName(final String jobCapabilityName) {
         this.jobCapabilityName = jobCapabilityName;
     }
+
 }

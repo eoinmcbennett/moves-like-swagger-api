@@ -75,7 +75,8 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT job_specification, sharepoint_link "
+            String sqlString = "SELECT job_name, job_specification, "
+                    + "sharepoint_link "
                     + "FROM JobRoles WHERE job_id = ?;";
 
             // prepare statement
@@ -90,6 +91,7 @@ public class JobDao implements IJobDAO {
             // create and return job spec response object with row returned
             while (resultSet.next()) {
                 return new JobSpecificationResponse(
+                        resultSet.getString("job_name"),
                         resultSet.getString("job_specification"),
                         resultSet.getString("sharepoint_link"));
             }

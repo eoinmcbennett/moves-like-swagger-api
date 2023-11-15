@@ -5,6 +5,11 @@ public class JobSpecificationResponse {
     // attributes
 
     /**
+     * Name of job.
+     */
+    private String jobName;
+
+    /**
      * Specification summary of job.
      */
     private String jobSpecification;
@@ -17,19 +22,38 @@ public class JobSpecificationResponse {
     // constructor
 
     /**
-     * Constructor with args - creates a job spec request with a
-     * specification summary and
-     * sharepoint link.
+     * Constructor with args - creates a job specification response
+     * with a job name, job spec summary and sharepoint link.
+     * @param jobName
      * @param jobSpecification
      * @param sharepointLink
      */
-    public JobSpecificationResponse(final String jobSpecification,
+    public JobSpecificationResponse(final String jobName,
+                                    final String jobSpecification,
                                     final String sharepointLink) {
+        this.jobName = jobName;
         this.jobSpecification = jobSpecification;
         this.sharepointLink = sharepointLink;
     }
 
+
     // getters and setters
+
+    /**
+     * Get name of job.
+     * @return String jobName
+     */
+    public String getJobName() {
+        return jobName;
+    }
+
+    /**
+     * Set name of job.
+     * @param jobName
+     */
+    public void setJobName(final String jobName) {
+        this.jobName = jobName;
+    }
 
     /**
      * Get job spec.
@@ -44,6 +68,7 @@ public class JobSpecificationResponse {
      * @param jobSpecification
      */
     public void setJobSpecification(final String jobSpecification) {
+
         this.jobSpecification = jobSpecification;
     }
 
@@ -60,6 +85,7 @@ public class JobSpecificationResponse {
      * @param sharepointLink
      */
     public void setSharepointLink(final String sharepointLink) {
+
         this.sharepointLink = sharepointLink;
     }
 }
