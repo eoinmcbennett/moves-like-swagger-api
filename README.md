@@ -16,7 +16,13 @@ DB_PASSWORD
 DB_HOST
 DB_NAME
 ```
-2. Configure Docker when building a Docker image for the application.
+
+2. The following environment variables need to be set to allow authentication to work.
+Make sure to set this to a long random string.
+```
+JWT_SECRET
+```
+3. Configure Docker when building a Docker image for the application.
 
 This command configures your Docker image with the database connection parameters, making it ready for deployment.
 
