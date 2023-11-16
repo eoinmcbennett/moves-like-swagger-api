@@ -35,7 +35,6 @@ public class AuthIntegrationTest {
             throw new IllegalArgumentException("Test credential environment variables not set!");
         }
         BasicCredentials credentials = new BasicCredentials(VALID_USER_NAME,VALID_USER_PASSWORD);
-        System.out.println(credentials.getUsername());
         Response response = APP.client().target("http://localhost:8080/api/login").request().post(Entity.json(credentials));
 
         Assertions.assertEquals(200, response.getStatus());
