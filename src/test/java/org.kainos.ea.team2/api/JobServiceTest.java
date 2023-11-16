@@ -55,12 +55,14 @@ public class JobServiceTest {
         // create jobs
         Job job1 = new Job(1, "Software Engineer", "Engineering");
         Job job2 = new Job(2, "QA Tester", "Engineering");
+        Job job3 = new Job(2, "Security Engineer", "Cyber Security");
 
         // create array list of jobs
         List<Job> testJobs = new ArrayList<>();
         // add jobs to array list
         testJobs.add(job1);
         testJobs.add(job2);
+        testJobs.add(job3);
 
         // specify return of jobs when dao is called
         Mockito.when(jobDao.getJobs()).thenReturn(testJobs);
