@@ -1,6 +1,5 @@
 package org.kainos.ea.team2.core;
 
-import io.fusionauth.jwt.InvalidJWTException;
 import org.kainos.ea.team2.api.AuthenticationService;
 import org.kainos.ea.team2.api.IAuthenticationService;
 import org.kainos.ea.team2.cli.Authorise;

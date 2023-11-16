@@ -1,6 +1,5 @@
 package org.kainos.ea.team2.api;
 
-import io.fusionauth.jwt.InvalidJWTException;
 import io.fusionauth.jwt.JWTUtils;
 import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.Verifier;
@@ -168,7 +167,7 @@ public class AuthenticationService implements IAuthenticationService {
         try {
             JWT userJWT = JWT.getDecoder().decode(jwt, jwtVerifier);
             return userJWT != null;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new AuthenticationException(e.getMessage());
         }
     }
@@ -183,7 +182,7 @@ public class AuthenticationService implements IAuthenticationService {
     public String sign(final JWT jwt) throws AuthenticationException {
         try {
             return JWT.getEncoder().encode(jwt, jwtSigner);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new AuthenticationException(e.getMessage());
         }
     }
