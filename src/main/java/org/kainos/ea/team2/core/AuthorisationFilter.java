@@ -5,6 +5,7 @@ import org.kainos.ea.team2.api.AuthenticationService;
 import org.kainos.ea.team2.api.IAuthenticationService;
 import org.kainos.ea.team2.cli.Authorise;
 import org.kainos.ea.team2.cli.UserRole;
+import org.kainos.ea.team2.client.AuthenticationException;
 
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -57,33 +58,30 @@ public class AuthorisationFilter implements ContainerRequestFilter {
         if (authorisationHeader == null) {
           containerRequestContext.abortWith(
                   Response.status(Response.Status.BAD_REQUEST)
-                      .build());
+                  .build());
           return;
         }
 
         String encodedJWT = authorisationHeader.split(" ")[1];
         if (encodedJWT == null) {
-            containerRequestContext
-                    .abortWith(
-                            Response.status(Response.Status.BAD_REQUEST)
+            containerRequestContext.abortWith(
+                    Response.status(Response.Status.BAD_REQUEST)
                     .build());
             return;
         }
 
        try {
            if (!this.authService.validate(encodedJWT)) {
-               containerRequestContext
-                       .abortWith(
-                            Response.status(Response.Status.UNAUTHORIZED)
+               containerRequestContext.abortWith(
+                        Response.status(Response.Status.UNAUTHORIZED)
                         .build());
                return;
            }
 
            UserRole tokenRole = AuthenticationService.getTokenRole(encodedJWT);
            if (tokenRole == null) {
-               containerRequestContext
-                   .abortWith(
-                       Response.status(Response.Status.UNAUTHORIZED)
+               containerRequestContext.abortWith(
+                   Response.status(Response.Status.UNAUTHORIZED)
                    .build());
                return;
            }
@@ -91,9 +89,10 @@ public class AuthorisationFilter implements ContainerRequestFilter {
            if (tokenRole.getUserRole() < role.getUserRole()) {
                containerRequestContext.abortWith(
                        Response.status(
-                       Response.Status.FORBIDDEN).build());
+                       Response.Status.FORBIDDEN)
+                       .build());
            }
-       } catch (InvalidJWTException e) {
+       } catch (AuthenticationException e) {
            containerRequestContext.abortWith(
                    Response.status(
                    Response.Status.BAD_REQUEST).build());

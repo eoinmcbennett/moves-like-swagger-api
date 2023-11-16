@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kainos.ea.team2.cli.BasicCredentials;
 import org.kainos.ea.team2.cli.HashedPassword;
+import org.kainos.ea.team2.cli.UserRole;
 import org.kainos.ea.team2.client.AuthenticationException;
 import org.kainos.ea.team2.client.BasicCredentialValidator;
 import org.kainos.ea.team2.client.IValidator;
@@ -65,6 +66,7 @@ public class AuthServiceTest {
         BasicCredentials credentials = new BasicCredentials("test","testing");
 
         Mockito.when(authenticationSource.getHashedPasswordForUser("test")).thenReturn(generatedPassword);
+        Mockito.when(authenticationSource.getRoleForUser("test")).thenReturn(UserRole.User);
 
         JWT userToken = authService.authenticate(credentials);
 
@@ -186,6 +188,7 @@ public class AuthServiceTest {
         BasicCredentials credentials = new BasicCredentials("test","testing");
 
         Mockito.when(authenticationSource.getHashedPasswordForUser("test")).thenReturn(generatedPassword);
+        Mockito.when(authenticationSource.getRoleForUser("test")).thenReturn(UserRole.User);
 
         JWT userToken = authService.authenticate(credentials);
 
@@ -208,11 +211,95 @@ public class AuthServiceTest {
         BasicCredentials credentials = new BasicCredentials("test","testing");
 
         Mockito.when(authenticationSource.getHashedPasswordForUser("test")).thenReturn(generatedPassword);
+        Mockito.when(authenticationSource.getRoleForUser("test")).thenReturn(UserRole.User);
 
         JWT userToken = authService.authenticate(credentials);
 
         String signedToken = authService.sign(userToken);
 
         Assertions.assertNotNull(signedToken);
-     }
+    }
+
+  @Test
+  void authService_validateShouldReturnTrue_whenValidSignedTokenPassed()
+      throws AuthenticationException, ValidationException {
+        IAuthenticationSource authenticationSource = Mockito.mock(IAuthenticationSource.class);
+        IAuthenticationService authService = new AuthenticationService(authenticationSource, JWT_SECRET, validator);
+
+        HashedPassword generatedPassword = generateHashForPassword("testing");
+        if(generatedPassword == null){
+            fail("Couldn't generate hashed password");
+        }
+
+        BasicCredentials credentials = new BasicCredentials("test","testing");
+
+        Mockito.when(authenticationSource.getHashedPasswordForUser("test")).thenReturn(generatedPassword);
+        Mockito.when(authenticationSource.getRoleForUser("test")).thenReturn(UserRole.User);
+
+        JWT userToken = authService.authenticate(credentials);
+
+        String signedToken = authService.sign(userToken);
+
+        Assertions.assertTrue(authService.validate(signedToken));
+    }
+
+    @Test
+    void authService_validateShouldReturnFalse_whenInvalidSignedTokenPassed()
+            throws AuthenticationException, ValidationException {
+        IAuthenticationSource authenticationSource = Mockito.mock(IAuthenticationSource.class);
+        IAuthenticationService authService = new AuthenticationService(authenticationSource, JWT_SECRET, validator);
+
+        HashedPassword generatedPassword = generateHashForPassword("testing");
+        if(generatedPassword == null){
+            fail("Couldn't generate hashed password");
+        }
+
+        BasicCredentials credentials = new BasicCredentials("test","testing");
+
+        Mockito.when(authenticationSource.getHashedPasswordForUser("test")).thenReturn(generatedPassword);
+        Mockito.when(authenticationSource.getRoleForUser("test")).thenReturn(UserRole.User);
+
+        JWT userToken = authService.authenticate(credentials);
+
+        String signedToken = authService.sign(userToken);
+
+        char[] signedTokenChars = signedToken.toCharArray();
+        signedTokenChars[signedTokenChars.length - 1] = 0;
+
+        Assertions.assertTrue(authService.validate(signedToken));
+    }
+
+    @Test
+    void authService_validateShouldReturnThrowAuthenticationException_whenInvalidJWTPassed()
+            throws AuthenticationException, ValidationException {
+        IAuthenticationSource authenticationSource = Mockito.mock(IAuthenticationSource.class);
+        IAuthenticationService authService = new AuthenticationService(authenticationSource, JWT_SECRET, validator);
+
+        Assertions.assertThrows(AuthenticationException.class,() -> {
+            authService.validate("TEST.TEST.TEST");
+        });
+    }
+
+  @Test
+  void authService_validateRoleReturnedFromEncodedJWT_whenValidEncodedJWTIsPassed()
+      throws AuthenticationException, ValidationException {
+        IAuthenticationSource authenticationSource = Mockito.mock(IAuthenticationSource.class);
+        IAuthenticationService authService = new AuthenticationService(authenticationSource, JWT_SECRET, validator);
+
+        HashedPassword generatedPassword = generateHashForPassword("testing");
+        if(generatedPassword == null){
+            fail("Couldn't generate hashed password");
+        }
+
+        BasicCredentials credentials = new BasicCredentials("test","testing");
+
+        Mockito.when(authenticationSource.getHashedPasswordForUser("test")).thenReturn(generatedPassword);
+        Mockito.when(authenticationSource.getRoleForUser("test")).thenReturn(UserRole.User);
+
+        JWT userToken = authService.authenticate(credentials);
+
+        String signedToken = authService.sign(userToken);
+
+        Assertions.assertEquals(AuthenticationService.getTokenRole(signedToken),UserRole.User);
+    }
 }

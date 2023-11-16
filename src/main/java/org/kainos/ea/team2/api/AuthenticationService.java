@@ -1,5 +1,6 @@
 package org.kainos.ea.team2.api;
 
+import io.fusionauth.jwt.InvalidJWTException;
 import io.fusionauth.jwt.JWTUtils;
 import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.Verifier;
@@ -160,21 +161,31 @@ public class AuthenticationService implements IAuthenticationService {
      * Checks if the encoded JWT passed was issued by this server.
      * @param jwt the JWT to validate.
      * @return true if valid, false if not.
+     * @throws AuthenticationException thrown if validation was not possible
      */
     @Override
-    public boolean validate(final String jwt) {
-        JWT userJWT = JWT.getDecoder().decode(jwt, jwtVerifier);
-        return userJWT != null;
+    public boolean validate(final String jwt) throws AuthenticationException {
+        try {
+            JWT userJWT = JWT.getDecoder().decode(jwt, jwtVerifier);
+            return userJWT != null;
+        } catch (Exception e){
+            throw new AuthenticationException(e.getMessage());
+        }
     }
 
     /**
      * Attempts to sign and encode a JWT.
      * @param jwt the JWT to sign
      * @return the signed, encoded JWT
+     * @throws AuthenticationException thrown if signing was not possible
      */
     @Override
-    public String sign(final JWT jwt) {
-        return JWT.getEncoder().encode(jwt, jwtSigner);
+    public String sign(final JWT jwt) throws AuthenticationException {
+        try {
+            return JWT.getEncoder().encode(jwt, jwtSigner);
+        } catch (Exception e){
+            throw new AuthenticationException(e.getMessage());
+        }
     }
 
     /**
