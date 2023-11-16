@@ -18,6 +18,12 @@ public interface IAuthenticationSource {
     HashedPassword getHashedPasswordForUser(String username)
             throws AuthenticationException;
 
+    /**
+     * Gets the role for a specific user.
+     * @param username the username to check
+     * @return UserRole enum describing user role
+     * @throws AuthenticationException thrown if error getting user role
+     */
     UserRole getRoleForUser(String username)
         throws AuthenticationException;
 }

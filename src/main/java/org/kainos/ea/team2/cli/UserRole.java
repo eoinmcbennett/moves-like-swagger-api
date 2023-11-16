@@ -1,31 +1,64 @@
 package org.kainos.ea.team2.cli;
 
+/**
+ * Represents a role the user can can have.
+ */
 public enum UserRole {
-    User(1), Admin(2);
+    /**
+     * User role.
+     */
+    User(1),
 
-    private int userRole;
+    /**
+     * Admin role.
+     */
+    Admin(2);
 
-    private static final String[] roleNames = new String[]{"User","Admin"};
+    /**
+     * The integer of the role.
+     */
+    private final int userRole;
 
-    private UserRole(int userRole){
+    /**
+     * The string representations of the role.
+     */
+    private static final String[] ROLE_NAMES = new String[] {"User", "Admin"};
+
+    /**
+     * Private constructor to create a new role.
+     * @param userRole the role to use
+     */
+    UserRole(final int userRole) {
         this.userRole = userRole;
     }
 
+    /**
+     * Gets the int associated with the enum.
+     * @return role id
+     */
     public int getUserRole() {
         return this.userRole;
     }
 
-    public static UserRole getUserRoleFromId(int id){
-        switch (id){
+    /**
+     * Gets the enum from the role id.
+     * @param id the id to check
+     * @return the role
+     */
+    public static UserRole getUserRoleFromId(final int id) {
+        switch (id) {
             case 1: return UserRole.User;
             case 2: return UserRole.Admin;
+            default: return null;
         }
-
-        return null;
     }
 
+    /**
+     * Gets the string representation of the current role.
+     * @return the role name as a string
+     */
     @Override
     public String toString() {
-        return roleNames[this.userRole -1];
+        return ROLE_NAMES[this.userRole - 1];
     }
 }

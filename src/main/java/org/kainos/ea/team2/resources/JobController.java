@@ -1,9 +1,12 @@
 package org.kainos.ea.team2.resources;
 
 import io.swagger.annotations.Api;
+import org.kainos.ea.team2.cli.Authorise;
+import org.kainos.ea.team2.cli.UserRole;
 import org.kainos.ea.team2.db.DatabaseConnector;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -20,12 +23,15 @@ public class JobController {
 
   /**
    * Provides a list of jobs within the system.
+   * @param token the token from the header
    * @return List of jobs in JSON or nothing
    */
   @GET
   @Path("/jobs")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getJobs() {
+  @Authorise(UserRole.Admin)
+  public Response getJobs(
+          @HeaderParam("Authorization") final String token) {
     try {
       Connection conn = DatabaseConnector.getConnection();
       Statement st = conn.createStatement();

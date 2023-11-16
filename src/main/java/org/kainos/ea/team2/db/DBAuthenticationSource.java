@@ -46,25 +46,32 @@ public class DBAuthenticationSource implements IAuthenticationSource {
         }
     }
 
+    /**
+     * Gets the role associated with a user.
+     * @param username the username to check
+     * @return the user role object to return or null
+     * @throws AuthenticationException thrown on couldn't fetch role.
+     */
     @Override
-    public UserRole getRoleForUser(String username) throws AuthenticationException {
-        String SQL = "SELECT role_id, role_name"
-                + " FROM Users WHERE email = ? "
-                + " JOIN Roles USING(role_id)";
+    public UserRole getRoleForUser(final String username)
+            throws AuthenticationException {
+        String sql = "SELECT role_id, role_name"
+                + " FROM Users JOIN Roles "
+                + "USING(role_id) WHERE email = ?";
 
         try {
             Connection conn = DatabaseConnector.getConnection();
-            PreparedStatement st = conn.prepareStatement(SQL);
-            st.setString(1,username);
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, username);
 
             ResultSet rs = st.executeQuery();
 
-            if(rs.next()){
+            if (rs.next()) {
                 return UserRole.getUserRoleFromId(rs.getInt(1));
             }
 
             return null;
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
             throw new AuthenticationException("Failed to get user role!");
         }
