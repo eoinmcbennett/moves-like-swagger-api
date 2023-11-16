@@ -1,6 +1,7 @@
 package org.kainos.ea.team2.db;
 
 import org.kainos.ea.team2.cli.HashedPassword;
+import org.kainos.ea.team2.cli.UserRole;
 import org.kainos.ea.team2.client.AuthenticationException;
 
 import java.sql.Connection;
@@ -42,6 +43,30 @@ public class DBAuthenticationSource implements IAuthenticationSource {
             return null;
         } catch (SQLException e) {
             throw new AuthenticationException(e.getMessage());
+        }
+    }
+
+    @Override
+    public UserRole getRoleForUser(String username) throws AuthenticationException {
+        String SQL = "SELECT role_id, role_name"
+                + " FROM Users WHERE email = ? "
+                + " JOIN Roles USING(role_id)";
+
+        try {
+            Connection conn = DatabaseConnector.getConnection();
+            PreparedStatement st = conn.prepareStatement(SQL);
+            st.setString(1,username);
+
+            ResultSet rs = st.executeQuery();
+
+            if(rs.next()){
+                return UserRole.getUserRoleFromId(rs.getInt(1));
+            }
+
+            return null;
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+            throw new AuthenticationException("Failed to get user role!");
         }
     }
 }

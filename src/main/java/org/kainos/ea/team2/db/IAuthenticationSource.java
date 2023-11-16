@@ -1,6 +1,7 @@
 package org.kainos.ea.team2.db;
 
 import org.kainos.ea.team2.cli.HashedPassword;
+import org.kainos.ea.team2.cli.UserRole;
 import org.kainos.ea.team2.client.AuthenticationException;
 
 /**
@@ -16,4 +17,7 @@ public interface IAuthenticationSource {
      */
     HashedPassword getHashedPasswordForUser(String username)
             throws AuthenticationException;
+
+    UserRole getRoleForUser(String username)
+        throws AuthenticationException;
 }
