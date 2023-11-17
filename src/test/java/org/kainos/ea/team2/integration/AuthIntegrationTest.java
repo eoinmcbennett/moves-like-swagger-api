@@ -26,6 +26,7 @@ public class AuthIntegrationTest {
     private static final String VALID_USER_NAME = System.getenv("TEST_VALID_USERNAME");
     private static final String VALID_USER_PASSWORD = System.getenv("TEST_VALID_PASSWORD");
 
+
     /**
      * Verify that logging in valid credentials gives back a valid JWT
      */

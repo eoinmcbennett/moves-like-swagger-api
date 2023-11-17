@@ -14,13 +14,13 @@ import javax.validation.constraints.NotNull;
 @SwaggerDefinition(
   securityDefinition = @SecurityDefinition(
     apiKeyAuthDefinitions = {
-      @ApiKeyAuthDefinition(key = "basicAuth", name = "Authorization", in = ApiKeyAuthDefinition.ApiKeyLocation.HEADER)
+      @ApiKeyAuthDefinition(
+        key = "basicAuth",
+        name = "Authorization",
+        in = ApiKeyAuthDefinition.ApiKeyLocation.HEADER)
     }
   )
 )
-
-
-
 public final class MovesLikeSwaggerConfiguration extends Configuration {
   /**
    * Swagger configuration bundle.

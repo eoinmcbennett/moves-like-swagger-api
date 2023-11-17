@@ -1,6 +1,7 @@
 package org.kainos.ea.team2.resources;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.Authorization;
 import org.kainos.ea.team2.cli.Authorise;
 import org.kainos.ea.team2.cli.UserRole;
 import org.kainos.ea.team2.api.JobService;
@@ -18,11 +19,11 @@ import javax.ws.rs.core.Response;
 @Path("/api")
 @Api(
     value = "Moves Like Swagger API",
-    authorizations = {@Authorization(value="basicAuth")}
+    authorizations = {@Authorization(value = "basicAuth")}
 )
 public class JobController {
     /**
-     * Job service to use for the controller
+     * Job service to use for the controller.
      */
     private final JobService jobService = new JobService(new JobDao());
 
@@ -59,7 +60,7 @@ public class JobController {
     @GET
     @Path("/job-specification/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Authorise(UserRole.Admin)
+    @Authorise(UserRole.User)
     public Response getJobSpec(
             @PathParam("id") final int id) {
         try {
