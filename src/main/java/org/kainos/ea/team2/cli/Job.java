@@ -11,34 +11,47 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Job {
     /**
-     * Name of job.
+     * id of job.
+     */
+    private int jobId;
+
+    /**
+     * name of job.
      */
     private String jobName;
 
     /**
-     * id of job.
+     * capability of job.
      */
-    private int jobId;
+    private String jobCapabilityName;
 
     /**
      * The band level of the position.
      */
     private BandLevel bandLevel;
 
+
     /**
-     * constructor with args - creates a job with a job id and job name.
+     * Constructor with args - creates a job with a name and id.
      * @param jobId the id of the job
      * @param jobName the name of the job
-     * @param bandLevel the band level for the job
+     * @param jobCapabilityName the capability the job belongs to.
+     * @param bandLevel the band level the job is in
      */
     @JsonCreator
     public Job(@JsonProperty("jobId") final int jobId,
                @JsonProperty("jobName") final String jobName,
-                @JsonProperty("bandLevel") final BandLevel bandLevel) {
+               @JsonProperty("capability_name")
+                   final String jobCapabilityName,
+    @JsonProperty("bandLevel") final BandLevel bandLevel) {
         this.jobId = jobId;
         this.jobName = jobName;
+        this.jobCapabilityName = jobCapabilityName;
         this.bandLevel = bandLevel;
     }
+
+
+    // getters and setters
 
     /**
      * get name of job.
@@ -46,14 +59,6 @@ public class Job {
      */
     public String getJobName() {
         return jobName;
-    }
-
-    /**
-     * set name of job.
-     * @param jobName String jobName
-     */
-    public void setJobName(final String jobName) {
-        this.jobName = jobName;
     }
 
     /**
@@ -78,6 +83,30 @@ public class Job {
      */
     public BandLevel getBandLevel() {
         return this.bandLevel;
+    }
+
+    /**
+     * set name of job.
+     * @param jobName the name of the job
+     */
+    public void setJobName(final String jobName) {
+        this.jobName = jobName;
+    }
+
+    /**
+     * get capability of job.
+     * @return jobId.
+     */
+    public String getJobCapabilityName() {
+        return jobCapabilityName;
+    }
+
+    /**
+     * set capability of job.
+     * @param jobCapabilityName the capability to set
+     */
+    public void setJobCapabilityName(final String jobCapabilityName) {
+        this.jobCapabilityName = jobCapabilityName;
     }
 
     /**

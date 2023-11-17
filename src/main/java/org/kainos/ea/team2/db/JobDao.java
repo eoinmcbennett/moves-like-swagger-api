@@ -32,8 +32,9 @@ public class JobDao implements IJobDAO {
 
             // sql string
             String sqlString = "SELECT job_id, job_name, "
-                    + "bandlevel_id, band_name "
-                    + "FROM JobRoles JOIN BandLevel USING(bandlevel_id);";
+                    + "bandlevel_id, band_name, capability_name "
+                    + "FROM JobRoles JOIN BandLevel USING(bandlevel_id) "
+                    + "INNER JOIN Capabilities USING(capability_id);";
 
             // prepare sql statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);
@@ -51,6 +52,7 @@ public class JobDao implements IJobDAO {
                 Job job = new Job(
                     resultSet.getInt("job_id"),
                     resultSet.getString("job_name"),
+                    resultSet.getString("capability_name"),
                     level
                 );
 
