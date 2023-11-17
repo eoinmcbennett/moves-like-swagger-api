@@ -1,6 +1,4 @@
 /**
- * Moves like swagger drop wizard API.
- * @author Moves Like Swagger
- * @version 0.0
+ * Contains all service implementations within the API.
  */
 package org.kainos.ea.team2.api;
