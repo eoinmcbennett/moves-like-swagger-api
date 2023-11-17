@@ -14,7 +14,7 @@ ENV DB_USER ${DB_USER}
 ENV DB_NAME ${DB_NAME}
 ENV JWT_SECRET ${JWT_SECRET}
 
-RUN mvn clean install -DskipTests=true
+RUN mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true
 
 EXPOSE 8080
 
