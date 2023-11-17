@@ -1,3 +1,5 @@
+name: JMeter Test
+
 on: [push]
 
 jobs:
