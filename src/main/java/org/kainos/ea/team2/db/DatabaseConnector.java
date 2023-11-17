@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public final class DatabaseConnector {
+public abstract class DatabaseConnector {
     /**
      * The currently active connection to the database.
      */

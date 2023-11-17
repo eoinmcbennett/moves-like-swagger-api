@@ -1,50 +1,77 @@
 package org.kainos.ea.team2.resources;
 
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import org.kainos.ea.team2.cli.Authorise;
 import org.kainos.ea.team2.cli.UserRole;
-import org.kainos.ea.team2.db.DatabaseConnector;
+import org.kainos.ea.team2.api.JobService;
+import org.kainos.ea.team2.db.JobDao;
+import org.kainos.ea.team2.exception.FailedToGetException;
+import org.kainos.ea.team2.exception.JobDoesNotExistException;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("/api")
-@Api("Moves Like Swagger API")
+@Api(
+    value = "Moves Like Swagger API",
+    authorizations = {@Authorization(value="basicAuth")}
+)
 public class JobController {
+    /**
+     * Job service to use for the controller
+     */
+    private final JobService jobService = new JobService(new JobDao());
 
-  /**
-   * Provides a list of jobs within the system.
-   * @param token the token from the header
-   * @return List of jobs in JSON or nothing
-   */
-  @GET
-  @Path("/jobs")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Authorise(UserRole.Admin)
-  public Response getJobs(
-          @HeaderParam("Authorization") final String token) {
-    try {
-      Connection conn = DatabaseConnector.getConnection();
-      Statement st = conn.createStatement();
-      ResultSet rs = st.executeQuery("SELECT job_name FROM JobRoles");
-      List<String> jobs = new ArrayList<>();
-
-      while (rs.next()) {
-        jobs.add(rs.getString("job_name"));
-      }
-
-      return Response.ok().entity(jobs).build();
-    } catch (Exception e) {
-      return Response.serverError().entity(e.getMessage()).build();
+    /**
+     * endpoint to get list of jobs from database.
+     * @return Response with appropriate status code and body.
+     * Status code 200 if request successful and list non-empty.
+     * Status code 500 if internal server error.
+     */
+    @GET
+    @Path("/job-roles")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Authorise(UserRole.User)
+    public Response getJobs() {
+        try {
+            // call to jobs service to return list of jobs
+            return Response.status(Response.Status.OK).
+                    entity(jobService.getJobs()).build();
+        } catch (FailedToGetException e) {
+            // status code 500 if internal server error
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                    entity(e.getMessage()).build();
+        }
     }
-  }
+
+    /**
+     * endpoint to get list of jobs from database.
+     * @param id job id of job with returned spec and sharepoint link
+     * @return Response with appropriate status code and body.
+     * Status code 200 if request successful and list non-empty.
+     * Status code 500 if internal server error.
+     * Status code 404 if job with given id doesn't exist.
+     */
+    @GET
+    @Path("/job-specification/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Authorise(UserRole.Admin)
+    public Response getJobSpec(
+            @PathParam("id") final int id) {
+        try {
+            // call to jobs service to return job spec response object
+            return Response.status(Response.Status.OK).
+                    entity(jobService.getJobSpec(id)).build();
+        } catch (FailedToGetException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                    entity(e.getMessage()).build();
+        } catch (JobDoesNotExistException e) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(e.getMessage()).build();
+        }
+    }
 }
