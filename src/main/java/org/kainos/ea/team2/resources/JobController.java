@@ -25,9 +25,10 @@ import javax.ws.rs.core.SecurityContext;
 )
 public class JobController {
     /**
-     * Job service to use for the controller.
+     * Job service instance for the controller to use.
      */
     private final JobService jobService = new JobService(new JobDao());
+
 
     /**
      * endpoint to get list of jobs from database.

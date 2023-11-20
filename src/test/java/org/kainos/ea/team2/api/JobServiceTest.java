@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.db.IJobDAO;
@@ -29,6 +30,7 @@ public class JobServiceTest {
     // create instance of jobdao class
     private static IJobDAO jobDao;
 
+
     // create instance of job service class (being tested)
     private static JobService jobService;
 
@@ -53,9 +55,9 @@ public class JobServiceTest {
     void whenGetJobsCalled_jobServicesReturnsListOfJobs() throws FailedToGetException, SQLException {
 
         // create jobs
-        Job job1 = new Job(1, "Software Engineer", "Engineering");
-        Job job2 = new Job(2, "QA Tester", "Engineering");
-        Job job3 = new Job(2, "Security Engineer", "Cyber Security");
+        Job job1 = new Job(1, "Software Engineer","Engineering", new BandLevel(1,"Trainee"));
+        Job job2 = new Job(2, "QA Tester","Engineering",new BandLevel(1,"Trainee"));
+        Job job3 = new Job(2, "Security Engineer", "Cyber Security", new BandLevel(1,"Associate"));
 
         // create array list of jobs
         List<Job> testJobs = new ArrayList<>();

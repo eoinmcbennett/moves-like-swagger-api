@@ -1,5 +1,6 @@
 package org.kainos.ea.team2.db;
 
+import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.exception.FailedToGetException;
@@ -31,10 +32,9 @@ public class JobDao implements IJobDAO {
 
             // sql string
             String sqlString = "SELECT job_id, job_name, "
-                    + "Capabilities.capability_name FROM JobRoles "
-                    + "INNER JOIN JobFamilies ON JobRoles.job_family_id="
-                    + "JobFamilies.job_family_id INNER JOIN Capabilities "
-                    + "ON JobFamilies.capability_id=Capabilities.capability_id;";
+                    + "bandlevel_id, band_name, capability_name "
+                    + "FROM JobRoles JOIN BandLevel USING(bandlevel_id) "
+                    + "INNER JOIN Capabilities USING(capability_id);";
 
             // prepare sql statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);
@@ -44,11 +44,18 @@ public class JobDao implements IJobDAO {
 
             // add each returned row to jobList
             while (resultSet.next()) {
-                // create new job
-                Job job = new Job(resultSet.getInt("job_id"),
-                        resultSet.getString("job_name"),
-                        resultSet.getString("capability_name"));
-                // add new job to list
+                BandLevel level = new BandLevel(
+                    resultSet.getInt("bandlevel_id"),
+                    resultSet.getString("band_name")
+                );
+
+                Job job = new Job(
+                    resultSet.getInt("job_id"),
+                    resultSet.getString("job_name"),
+                    resultSet.getString("capability_name"),
+                    level
+                );
+
                 jobList.add(job);
             }
 
