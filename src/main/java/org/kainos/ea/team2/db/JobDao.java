@@ -31,9 +31,10 @@ public class JobDao implements IJobDAO {
 
             // sql string
             String sqlString = "SELECT job_id, job_name, "
-                    + "Capabilities.capability_name "
-                    + "FROM JobRoles INNER JOIN Capabilities ON "
-                    + "JobRoles.capability_id=Capabilities.capability_id;";
+                    + "Capabilities.capability_name FROM JobRoles "
+                    + "INNER JOIN JobFamilies ON JobRoles.job_family_id="
+                    + "JobFamilies.job_family_id INNER JOIN Capabilities "
+                    + "ON JobFamilies.capability_id=Capabilities.capability_id;";
 
             // prepare sql statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);

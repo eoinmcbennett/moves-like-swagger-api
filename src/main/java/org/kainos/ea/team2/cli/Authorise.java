@@ -15,13 +15,6 @@ import java.lang.annotation.Target;
 public @interface Authorise {
 
     /**
-     * Stores the role that can access the resource.
-     * By default, role is user.
-     * @return
-     */
-    //UserRole value() default UserRole.User;
-
-    /**
      * indicates if an admin role is required to visit a given route. Unless otherwise specified,
      * requireAdmin will be false.
      * @return
