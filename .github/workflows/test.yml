@@ -1,0 +1,28 @@
+name: Test with Maven
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Run tests
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          TEST_VALID_USERNAME: ${{ secrets.TEST_VALID_USERNAME }}
+          TEST_VALID_PASSWORD: ${{ secrets.TEST_VALID_PASSWORD }}
+        run: mvn test -no-transfer-progress

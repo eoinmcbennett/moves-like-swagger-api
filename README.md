@@ -16,7 +16,13 @@ DB_PASSWORD
 DB_HOST
 DB_NAME
 ```
-2. Configure Docker when building a Docker image for the application.
+
+2. The following environment variables need to be set to allow authentication to work.
+Make sure to set this to a long random string.
+```
+JWT_SECRET
+```
+3. Configure Docker when building a Docker image for the application.
 
 This command configures your Docker image with the database connection parameters, making it ready for deployment.
 
@@ -34,8 +40,11 @@ How to start the moves-like-swagger-api application
 
 Swagger
 ---
-
 To see your applications Swagger UI `http://localhost:8080/swagger`
+
+Linting
+---
+In order to check your code with the linter locally. Run `mvn checkstyle:check -e` and address anything in the output
 
 Tests
 ---
