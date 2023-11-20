@@ -67,6 +67,7 @@ public class DBAuthenticationSource implements IAuthenticationSource {
             ResultSet rs = st.executeQuery();
 
             if (rs.next()) {
+                // return either User or Admin enum based on role id returned
                 return UserRole.getUserRoleFromId(rs.getInt(1));
             }
 

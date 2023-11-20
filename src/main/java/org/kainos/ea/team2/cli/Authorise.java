@@ -13,9 +13,18 @@ import java.lang.annotation.Target;
 @Retention(value = RetentionPolicy.RUNTIME)
 @NameBinding
 public @interface Authorise {
+
     /**
-     * Stores the passed in role for the annotation.
-     * @return the lowest role that can access the resource
+     * Stores the role that can access the resource.
+     * By default, role is user.
+     * @return
      */
-    UserRole value() default UserRole.User;
+    //UserRole value() default UserRole.User;
+
+    /**
+     * indicates if an admin role is required to visit a given route. Unless otherwise specified,
+     * requireAdmin will be false.
+     * @return
+     */
+    boolean requireAdmin() default false;
 }

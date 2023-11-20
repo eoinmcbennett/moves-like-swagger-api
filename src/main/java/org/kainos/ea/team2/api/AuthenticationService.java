@@ -83,6 +83,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     /**
      * Re-generates a password hash given the passed parameters.
+     * Method called in authenticate method in Auth Service class.
      * @param password the password to hash.
      * @param salt the salt used in the hash.
      * @param iterations the number of iterations used in the hash.
@@ -119,19 +120,24 @@ public class AuthenticationService implements IAuthenticationService {
             final BasicCredentials credentials)
             throws AuthenticationException, ValidationException {
 
+        // pass entered credentials into validator class.
+        // returns null if data entered in both fields, returns a string if one/both fields are null or empty
         String error = validator.validate(credentials);
         if (error != null) {
+            // if string returned from validator, throw exception
             throw new ValidationException(error);
         }
 
+        // get the hashed password for user with entered name (see DBAuthenticationSource)
         HashedPassword hashedPassword =
                 authSource.getHashedPasswordForUser(credentials.getUsername());
 
+        // returns null if nothing returned from db i.e. username wrong
         if (hashedPassword == null) {
             return null;
         }
 
-        //re hash the provided password and add the existing salt
+        // re hash the provided password and add the existing salt
         String password = credentials.getPassword();
         byte[] salt = hashedPassword.getSalt();
         int iterations = hashedPassword.getIterations();
@@ -139,20 +145,23 @@ public class AuthenticationService implements IAuthenticationService {
 
         byte[] passwordHash = hashedPassword.getHashedPassword();
 
+        // if provided password does not equal password in db, return null
         if (!Arrays.equals(credentialHash, passwordHash)) {
             return null;
         }
 
+        // get role of given user from db (see DBAuthenticationSource)
         UserRole role = authSource.getRoleForUser(credentials.getUsername());
         if (role == null) {
             throw new AuthenticationException("Could not get role for user");
         }
 
+        // if no null returned yet, username and password are good and user has a role -> create jwt token
         return new JWT()
             .setIssuer("org.kainos.ea")
             .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
-            .setSubject(credentials.getUsername())
-            .addClaim("role", role.toString())
+            .setSubject(credentials.getUsername()) // subject is current credentials
+            .addClaim("role", role.toString()) // role of user
             .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusDays(1));
     }
 
@@ -181,6 +190,7 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public String sign(final JWT jwt) throws AuthenticationException {
         try {
+            // call to JWT class (java) to encode and sign jwt
             return JWT.getEncoder().encode(jwt, jwtSigner);
         } catch (Exception e) {
             throw new AuthenticationException(e.getMessage());

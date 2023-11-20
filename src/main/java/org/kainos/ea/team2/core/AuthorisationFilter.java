@@ -43,14 +43,25 @@ public class AuthorisationFilter implements ContainerRequestFilter {
      */
     @Override
     public void filter(final ContainerRequestContext containerRequestContext) {
+        // gets the resource method from the resourceInfo object
         Method method = resourceInfo.getResourceMethod();
+        // find out from authorise annotation in controller if this route is for user and or admin
         Authorise annotation = method.getAnnotation(Authorise.class);
 
+        // if authorise annotation null, route is accessible to all
         if (annotation == null) {
             return;
         }
 
-        UserRole role = annotation.value();
+        // required role is min role needed by person logged in to access route
+        UserRole requiredRole;
+
+        // if annotation required admin is false, required role is user. Otherwise, required role is admin
+        if(!annotation.requireAdmin()){
+            requiredRole = UserRole.User; // user = 1 (enum)
+        } else {
+            requiredRole = UserRole.Admin; // admin = 2 (enum)
+        }
 
         String authorisationHeader =
                 containerRequestContext.getHeaderString("Authorization");
@@ -70,6 +81,7 @@ public class AuthorisationFilter implements ContainerRequestFilter {
         }
 
        try {
+           // check if current jwt is valid
            if (!this.authService.validate(encodedJWT)) {
                containerRequestContext.abortWith(
                         Response.status(Response.Status.UNAUTHORIZED)
@@ -77,6 +89,7 @@ public class AuthorisationFilter implements ContainerRequestFilter {
                return;
            }
 
+           // get role of user passed into token
            UserRole tokenRole = AuthenticationService.getTokenRole(encodedJWT);
            if (tokenRole == null) {
                containerRequestContext.abortWith(
@@ -85,7 +98,9 @@ public class AuthorisationFilter implements ContainerRequestFilter {
                return;
            }
 
-           if (tokenRole.getUserRole() < role.getUserRole()) {
+           // if role passed in token is less than required role, route is forbidden
+           // i.e. if current user is role user (enum 1) and required role is admin (enum 2)
+           if (tokenRole.getUserRole() < requiredRole.getUserRole()) {
                containerRequestContext.abortWith(
                        Response.status(
                        Response.Status.FORBIDDEN)
