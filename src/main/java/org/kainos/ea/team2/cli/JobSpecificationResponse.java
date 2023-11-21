@@ -3,6 +3,10 @@ package org.kainos.ea.team2.cli;
 public class JobSpecificationResponse {
 
     // attributes
+    /**
+     * The ID of the Job
+     */
+    private int jobId;
 
     /**
      * Name of job.
@@ -24,20 +28,20 @@ public class JobSpecificationResponse {
     /**
      * Constructor with args - creates a job specification response
      * with a job name, job spec summary and sharepoint link.
+     * @param jobId
      * @param jobName
      * @param jobSpecification
      * @param sharepointLink
      */
-    public JobSpecificationResponse(final String jobName,
+    public JobSpecificationResponse(final int jobId,
+                                    final String jobName,
                                     final String jobSpecification,
                                     final String sharepointLink) {
+        this.jobId = jobId;
         this.jobName = jobName;
         this.jobSpecification = jobSpecification;
         this.sharepointLink = sharepointLink;
     }
-
-
-    // getters and setters
 
     /**
      * Get name of job.
@@ -87,5 +91,21 @@ public class JobSpecificationResponse {
     public void setSharepointLink(final String sharepointLink) {
 
         this.sharepointLink = sharepointLink;
+    }
+
+    /**
+     * Get the job ID
+     * @return the
+     */
+    public int getJobId() {
+        return jobId;
+    }
+
+    /**
+     * Set the job ID
+     * @param jobID
+     */
+    public void setJobId(int jobID) {
+        this.jobId = jobID;
     }
 }

@@ -58,4 +58,18 @@ public class JobService {
         // if non-null, return response from dao
         return jobSpecificationResponse;
     }
+
+    /**
+     * Calls the JobDao to delete a job with a specified JobID
+     * @param jobID
+     */
+    public void deleteJob(int jobID) throws JobDoesNotExistException, FailedToGetException {
+
+        // Check if job exists before attempting to delete it
+        if (jobDao.getJobSpec(jobID) == null) {
+            throw new JobDoesNotExistException();
+        }
+
+        jobDao.deleteJob(jobID);
+    }
 }
