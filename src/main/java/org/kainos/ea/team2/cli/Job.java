@@ -20,14 +20,17 @@ public class Job {
      */
     private int jobId;
 
+    private String capabilityName;
+
     /**
      * Constructor with args - creates a job with a name and id.
      * @param jobId
      * @param jobName
      */
-    public Job(final int jobId, final String jobName) {
+    public Job(final int jobId, final String jobName, final String capabilityName) {
         this.jobName = jobName;
         this.jobId = jobId;
+        this.capabilityName = capabilityName;
     }
 
     // getters and setters
@@ -64,5 +67,15 @@ public class Job {
         this.jobId = jobId;
     }
 
+    /**
+     * set name of capability.
+     * @param capabilityName
+     */
+    public void setCapabilityName(String capabilityName) { this.capabilityName = capabilityName;}
 
+    /**
+     * get name of capability.
+     * @return capabilityName.
+     */
+    public String getCapabilityName() { return capabilityName; }
 }

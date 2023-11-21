@@ -1,4 +1,5 @@
 package org.kainos.ea.team2.cli;
+import java.util.List;
 
 public class JobSpecificationResponse {
 
@@ -19,21 +20,29 @@ public class JobSpecificationResponse {
      */
     private String sharepointLink;
 
+    /**
+     * Link to full job spec on sharepoint.
+     */
+    private List<String> responsibilitiesList;
+
     // constructor
 
     /**
      * Constructor with args - creates a job specification response
-     * with a job name, job spec summary and sharepoint link.
+     * with a job name, job spec summary, sharepoint link and responsibilities
      * @param jobName
      * @param jobSpecification
      * @param sharepointLink
+     * @param responsibilitiesList
      */
     public JobSpecificationResponse(final String jobName,
                                     final String jobSpecification,
-                                    final String sharepointLink) {
+                                    final String sharepointLink,
+                                    final List<String> responsibilitiesList) {
         this.jobName = jobName;
         this.jobSpecification = jobSpecification;
         this.sharepointLink = sharepointLink;
+        this.responsibilitiesList = responsibilitiesList;
     }
 
 
@@ -87,5 +96,22 @@ public class JobSpecificationResponse {
     public void setSharepointLink(final String sharepointLink) {
 
         this.sharepointLink = sharepointLink;
+    }
+
+    /**
+     * Get job responsibilities.
+     * @return String job responsibilities
+     */
+    public List<String> getResponsibilitiesList() {
+        return responsibilitiesList;
+    }
+
+    /**
+     * Set job responsibilities.
+     * @param responsibilitiesList
+     */
+    public void setResponsibilitiesList(List<String> responsibilitiesList) {
+
+        this.responsibilitiesList = responsibilitiesList;
     }
 }

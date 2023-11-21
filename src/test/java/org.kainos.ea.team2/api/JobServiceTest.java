@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,8 +54,8 @@ public class JobServiceTest {
     void whenGetJobsCalled_jobServicesReturnsListOfJobs() throws FailedToGetException, SQLException {
 
         // create jobs
-        Job job1 = new Job(1, "Software Engineer");
-        Job job2 = new Job(2, "QA Tester");
+        Job job1 = new Job(1, "Software Engineer", "Engineering");
+        Job job2 = new Job(2, "QA Tester", "Engineering");
 
         // create array list of jobs
         List<Job> testJobs = new ArrayList<>();
@@ -115,7 +116,7 @@ public class JobServiceTest {
     void whenGetJobSpecCalled_shouldReturnJobSpec() throws FailedToGetException, JobDoesNotExistException {
 
         // create a job spec request to be returned
-        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse("job name","test job specification","https://kainos-sharepoint/job/1");
+        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse("job name","test job specification","https://kainos-sharepoint/job/1", Collections.singletonList("Responsibility1, Responsibility2"));
 
         // id of job we want to find spec of
         int jobId = 1;

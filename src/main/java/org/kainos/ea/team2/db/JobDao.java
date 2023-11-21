@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 public class JobDao implements IJobDAO {
 
@@ -30,10 +31,15 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT job_id, job_name FROM JobRoles;";
+            String sqlString = "SELECT job_id, job_name, "
+                    + "Capabilities.capability_name FROM JobRoles "
+                    + "INNER JOIN JobFamilies ON JobRoles.job_family_id="
+                    + "JobFamilies.job_family_id INNER JOIN Capabilities "
+                    + "ON JobFamilies.capability_id=Capabilities.capability_id;";
 
             // prepare sql statement
-            PreparedStatement preparedStatement = c.prepareStatement(sqlString);
+            PreparedStatement preparedStatement =
+                    c.prepareStatement(sqlString);
 
             // execute statement
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -42,7 +48,8 @@ public class JobDao implements IJobDAO {
             while (resultSet.next()) {
                 // create new job
                 Job job = new Job(resultSet.getInt("job_id"),
-                        resultSet.getString("job_name"));
+                        resultSet.getString("job_name"),
+                        resultSet.getString("capability_name"));
                 // add new job to list
                 jobList.add(job);
             }
@@ -57,9 +64,9 @@ public class JobDao implements IJobDAO {
     }
 
     /**
-     * Calls to the dao to return job spec and sharepoint link
-     * from the job table in the database.
-     * @param id job id of returned job spec and sharepoint link
+     * Calls to the dao to return job spec, sharepoint link and responsibilities
+     * from the job and responsibilities table in the database.
+     * @param id job id of returned job spec, sharepoint link and responsibility description
      * @return JobSpecificationResponse
      * @throws FailedToGetException if a sql error is thrown.
      */
@@ -67,32 +74,38 @@ public class JobDao implements IJobDAO {
             throws FailedToGetException {
 
         try {
-            // establish connection with db
+            // Establish connection with the database
             Connection c = DatabaseConnector.getConnection();
 
-            // sql string
-            String sqlString = "SELECT job_name, job_specification, "
-                    + "sharepoint_link "
-                    + "FROM JobRoles WHERE job_id = ?;";
+            // SQL string to fetch job details and responsibilities
+            String sqlString = "SELECT JobRoles.job_name, JobRoles.job_specification, JobRoles.sharepoint_link, " +
+                    "GROUP_CONCAT(Responsibilities.responsibility_description SEPARATOR ', ') AS responsibilities_list " +
+                    "FROM JobRoles " +
+                    "LEFT JOIN JobResponsibilities ON JobRoles.job_id = JobResponsibilities.job_id " +
+                    "LEFT JOIN Responsibilities ON JobResponsibilities.responsibility_id = Responsibilities.responsibility_id " +
+                    "WHERE JobRoles.job_id = ? " +
+                    "GROUP BY JobRoles.job_id;";
 
-            // prepare statement
+            // Prepare statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);
-
-            // set placeholder to be job id passed into method
             preparedStatement.setInt(1, id);
 
-            // execute query
+            // Execute query
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // create and return job spec response object with row returned
+            // Create and return job spec response object with rows returned
             while (resultSet.next()) {
+                String responsibilitiesString = resultSet.getString("responsibilities_list");
+                List<String> responsibilitiesList = Arrays.asList(responsibilitiesString.split(", "));
                 return new JobSpecificationResponse(
                         resultSet.getString("job_name"),
                         resultSet.getString("job_specification"),
-                        resultSet.getString("sharepoint_link"));
+                        resultSet.getString("sharepoint_link"),
+                        responsibilitiesList
+                );
             }
 
-            // if no rows returned, return null
+            // If no rows returned, return null
             return null;
 
         } catch (SQLException e) {
