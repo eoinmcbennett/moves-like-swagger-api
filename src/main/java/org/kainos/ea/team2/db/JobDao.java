@@ -4,7 +4,6 @@ import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.exception.FailedToGetException;
-import org.kainos.ea.team2.exception.JobDoesNotExistException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,12 +32,15 @@ public class JobDao implements IJobDAO {
 
             // sql string
             String sqlString = "SELECT job_id, job_name, "
-                    + "capability_name, band_name, BandLevel.bandlevel_id FROM JobRoles "
-                    + "INNER JOIN JobFamilies ON JobRoles.job_family_id = "
+                    + "capability_name, band_name, BandLevel.bandlevel_id "
+                    + "FROM JobRoles "
+                    + "INNER JOIN JobFamilies ON "
+                    + "JobRoles.job_family_id = "
                     + "JobFamilies.job_family_id INNER JOIN Capabilities "
-                    + "ON JobFamilies.capability_id = Capabilities.capability_id " +
-                    "INNER JOIN BandLevel ON JobRoles.bandlevel_id = " +
-                    "BandLevel.bandlevel_id;";
+                    + "ON JobFamilies.capability_id = "
+                    + "Capabilities.capability_id "
+                    + "INNER JOIN BandLevel ON JobRoles.bandlevel_id = "
+                    + "BandLevel.bandlevel_id;";
 
             // prepare sql statement
             PreparedStatement preparedStatement =
@@ -115,10 +117,10 @@ public class JobDao implements IJobDAO {
     }
 
     /**
-     * Deletes a job with a specified JobID from the database
+     * Deletes a job with a specified JobID from the database.
      * @param jobID
      */
-    public void deleteJob(int jobID) throws FailedToGetException {
+    public void deleteJob(final int jobID) throws FailedToGetException {
 
         try {
             // establish connection with db

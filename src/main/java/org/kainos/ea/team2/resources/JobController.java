@@ -6,7 +6,11 @@ import org.kainos.ea.team2.db.JobDao;
 import org.kainos.ea.team2.exception.FailedToGetException;
 import org.kainos.ea.team2.exception.JobDoesNotExistException;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -66,9 +70,9 @@ public class JobController {
     }
 
     /**
-     * Endpoint to delete a job from the database
-     * @param jobID The ID of the job to delete
-     * @return Response with appropriate status code and body
+     * Endpoint to delete a job from the database.
+     * @param jobID The ID of the job to delete.
+     * @return Response with appropriate status code and body.
      * Status code 200 if deletion was successful.
      * Status code 404 if the specified jobID does not exist.
      * Status code 500 if internal server error occurred.
@@ -81,9 +85,11 @@ public class JobController {
             jobService.deleteJob(jobID);
             return Response.noContent().build();
         } catch (JobDoesNotExistException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(e.getMessage()).build();
         } catch (FailedToGetException e) {
-            return Response.serverError().entity(e.getMessage()).build();
+            return Response.serverError()
+                    .entity(e.getMessage()).build();
         }
     }
 }

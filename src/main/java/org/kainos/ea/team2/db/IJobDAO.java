@@ -28,7 +28,8 @@ public interface IJobDAO {
      * Interface of job dao class, deletes a job from the database.
      * @param jobID The ID of the job to delete
      * @throws FailedToGetException If SQL error occurs in the DAO
-     * @throws JobDoesNotExistException If no job with the specified ID exists in the database
+     * @throws JobDoesNotExistException If no job with the specified ID exists
      */
-    void deleteJob(int jobID) throws FailedToGetException, JobDoesNotExistException;
+    void deleteJob(int jobID)
+            throws FailedToGetException, JobDoesNotExistException;
 }
