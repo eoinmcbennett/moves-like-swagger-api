@@ -74,7 +74,6 @@ public class DBAuthenticationSource implements IAuthenticationSource {
             return null;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            System.err.println("sql exception in dao");
             throw new AuthenticationException("Failed to get user role!");
         }
     }
