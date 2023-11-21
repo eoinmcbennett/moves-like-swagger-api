@@ -34,6 +34,7 @@ public class AuthIntegrationTest {
     void login_shouldReturn200_whenValidCredentialsArePassed() {
         // if environment vars not set, throw illegal arg exception
         if(VALID_USER_NAME == null || VALID_USER_PASSWORD == null){
+            System.out.println("env vars not set");
             throw new IllegalArgumentException("Test credential environment variables not set!");
         }
         // create basic credentials object with env vars
