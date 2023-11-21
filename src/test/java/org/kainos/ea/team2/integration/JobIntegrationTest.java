@@ -58,6 +58,20 @@ public class JobIntegrationTest {
      }
 
     /**
+     * Checks that status 400 bad request returned when user visits url when not logged in.
+     */
+    @Test
+     void getJobs_shouldReturn400BadRequestWhenNotLoggedIn(){
+         // call url to get jobs, no passed in jwt
+         Response response = APP.client().target("http://localhost:8080/api/job-roles")
+                 .request()
+                 .get();
+
+         // check status code 400 bad request returned
+         Assertions.assertEquals(400,response.getStatus());
+     }
+
+    /**
      * Verify that the getJobSpec method returns a JobSpecificationResponse.
      */
     @Test
@@ -97,5 +111,19 @@ public class JobIntegrationTest {
         // check response entity is not null
         Assertions.assertEquals("Job does not exist.", response.readEntity(String.class));
 
+    }
+
+    /**
+     * Checks that status 400 bad request returned when user visits url when not logged in.
+     */
+    @Test
+    void getJobSpec_shouldReturn400BadRequestWhenNotLoggedIn(){
+        // call url to get jobs, no passed in jwt
+        Response response = APP.client().target("http://localhost:8080/api/job-specification/1")
+                .request()
+                .get();
+
+        // check status code 400 bad request returned
+        Assertions.assertEquals(400,response.getStatus());
     }
 }

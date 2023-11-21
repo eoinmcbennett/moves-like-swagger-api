@@ -31,24 +31,33 @@ public class AuthIntegrationTest {
      * Verify that logging in valid credentials gives back a valid JWT
      */
     @Test
-    void login_shouldReturnValidJWT_whenValidCredentialsArePassed() {
+    void login_shouldReturn200_whenValidCredentialsArePassed() {
+        // if environment vars not set, throw illegal arg exception
         if(VALID_USER_NAME == null || VALID_USER_PASSWORD == null){
             throw new IllegalArgumentException("Test credential environment variables not set!");
         }
+        // create basic credentials object with env vars
         BasicCredentials credentials = new BasicCredentials(VALID_USER_NAME,VALID_USER_PASSWORD);
+        // post basic credentials
         Response response = APP.client().target("http://localhost:8080/api/login").request().post(Entity.json(credentials));
-
+        // check that response status is 200
         Assertions.assertEquals(200, response.getStatus());
     }
 
+    /**
+     * checks that 401 unauthorized is returned when a user attempts to login with wrong credentials.
+     */
     @Test
-    void login_shouldReturn401_whenWrongCredentialsArePassed() {
+    void login_shouldReturn401Unauthorized_whenWrongCredentialsArePassed() {
         BasicCredentials credentials = new BasicCredentials("ertetDFGHdfghfdgh","sdfgsdfg");
         Response response = APP.client().target("http://localhost:8080/api/login").request().post(Entity.json(credentials));
 
         Assertions.assertEquals(401, response.getStatus());
     }
 
+    /**
+     * Checks that 400 bad request is returned when a user leaves username and password blank.
+     */
     @Test
     void login_shouldReturn400_whenInvalidCredentialsArePassed() {
         BasicCredentials credentials = new BasicCredentials("",null);
@@ -57,6 +66,9 @@ public class AuthIntegrationTest {
         Assertions.assertEquals(400, response.getStatus());
     }
 
+    /**
+     * Checks that 400 bad request is returned when a user enters neither a username nor password.
+     */
     @Test
     void login_shouldReturn400_whenNullCredentialsArePassed() {
         Response response = APP.client().target("http://localhost:8080/api/login").request().post(Entity.json(null));

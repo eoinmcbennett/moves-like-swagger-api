@@ -40,12 +40,14 @@ public class AuthController {
             // pass entered username and password into auth service class
             JWT userJwt = authService.authenticate(credential);
 
-            // if null returned from auth service i.e. username and/or password wrong or user had no role, return status unauthorized.
+            // if null returned from auth service i.e. username and/or password
+            // wrong or user had no role, return status unauthorized.
             if (userJwt == null) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
 
-            // if userJwt not null, call to auth service class to sign and encode the JWT
+            // if userJwt not null, call to
+            // auth service class to sign and encode the JWT
             String signedToken = authService.sign(userJwt);
 
             // return response 200 with signed token
@@ -55,9 +57,11 @@ public class AuthController {
             System.err.println(e.getMessage());
             return Response.serverError().build();
         } catch (ValidationException e) {
-            // validation exception thrown if username and or password are empty on login attempt
+            // validation exception thrown if username
+            // and or password are empty on login attempt
             System.err.println(e);
-            // bad request status returned since username and or password left empty
+            // bad request status returned since
+            // username and or password left empty
             return Response.status(Response.Status.BAD_REQUEST)
                 .entity(e.getMessage())
                 .build();

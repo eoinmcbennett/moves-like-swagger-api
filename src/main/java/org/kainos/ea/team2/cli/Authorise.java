@@ -15,9 +15,11 @@ import java.lang.annotation.Target;
 public @interface Authorise {
 
     /**
-     * indicates if an admin role is required to visit a given route. Unless otherwise specified,
+     * indicates if an admin role is required to visit a given route.
+     * Unless otherwise specified,
      * requireAdmin will be false.
-     * @return
+     * @return boolean false if user doesn't need to be an admin,
+     * true if user needs to be an admin.
      */
     boolean requireAdmin() default false;
 }

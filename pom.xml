@@ -205,6 +205,10 @@
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
                                 <include>**/*JobServiceTest.java</include>
+                                <include>**/*BasicCredentialValidatorTest.java</include>
+                                <include>**/*JobDAOTest.java</include>
+                                <include>**/*AuthIntegrationTest.java</include>
+                                <include>**/*JobIntegrationTest.java</include>
                             </includes>
                         </configuration>
                     </execution>

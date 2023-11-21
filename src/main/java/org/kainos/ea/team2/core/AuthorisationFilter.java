@@ -45,7 +45,8 @@ public class AuthorisationFilter implements ContainerRequestFilter {
     public void filter(final ContainerRequestContext containerRequestContext) {
         // gets the resource method from the resourceInfo object
         Method method = resourceInfo.getResourceMethod();
-        // find out from authorise annotation in controller if this route is for user and or admin
+        // find out from authorise annotation in
+        // controller if this route is for user and or admin
         Authorise annotation = method.getAnnotation(Authorise.class);
 
         // if authorise annotation null, route is accessible to all
@@ -56,8 +57,9 @@ public class AuthorisationFilter implements ContainerRequestFilter {
         // required role is min role needed by person logged in to access route
         UserRole requiredRole;
 
-        // if annotation required admin is false, required role is user. Otherwise, required role is admin
-        if(!annotation.requireAdmin()){
+        // if annotation required admin is false, required role is user.
+        // Otherwise, required role is admin
+        if (!annotation.requireAdmin()) {
             requiredRole = UserRole.User; // user = 1 (enum)
         } else {
             requiredRole = UserRole.Admin; // admin = 2 (enum)
@@ -98,8 +100,10 @@ public class AuthorisationFilter implements ContainerRequestFilter {
                return;
            }
 
-           // if role passed in token is less than required role, route is forbidden
-           // i.e. if current user is role user (enum 1) and required role is admin (enum 2)
+           // if role passed in token is less than required role,
+           // route is forbidden
+           // i.e. if current user is role user (enum 1)
+           // and required role is admin (enum 2)
            if (tokenRole.getUserRole() < requiredRole.getUserRole()) {
                containerRequestContext.abortWith(
                        Response.status(

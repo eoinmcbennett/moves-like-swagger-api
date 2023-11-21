@@ -121,14 +121,16 @@ public class AuthenticationService implements IAuthenticationService {
             throws AuthenticationException, ValidationException {
 
         // pass entered credentials into validator class.
-        // returns null if data entered in both fields, returns a string if one/both fields are null or empty
+        // returns null if data entered in both fields,
+        // returns a string if one/both fields are null or empty
         String error = validator.validate(credentials);
         if (error != null) {
             // if string returned from validator, throw exception
             throw new ValidationException(error);
         }
 
-        // get the hashed password for user with entered name (see DBAuthenticationSource)
+        // get the hashed password for
+        // user with entered name (see DBAuthenticationSource)
         HashedPassword hashedPassword =
                 authSource.getHashedPasswordForUser(credentials.getUsername());
 
@@ -156,11 +158,13 @@ public class AuthenticationService implements IAuthenticationService {
             throw new AuthenticationException("Could not get role for user");
         }
 
-        // if no null returned yet, username and password are good and user has a role -> create jwt token
+        // if no null returned yet, username and password
+        // are good and user has a role -> create jwt token
         return new JWT()
             .setIssuer("org.kainos.ea")
             .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
-            .setSubject(credentials.getUsername()) // subject is current credentials
+                // subject is current credentials
+            .setSubject(credentials.getUsername())
             .addClaim("role", role.toString()) // role of user
             .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusDays(1));
     }
