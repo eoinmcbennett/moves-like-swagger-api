@@ -109,7 +109,8 @@ public class JobServiceTest {
 
     /**
      * Testing getJobSpec method.
-     * Verifies that job service returns the job spec and sharepoint link
+     * Verifies that job service returns the job spec, sharepoint link
+     * and job responsibilities
      * when the dao returns these from db.
      */
     @Test
