@@ -126,7 +126,9 @@ public class AuthenticationService implements IAuthenticationService {
         String error = validator.validate(credentials);
         if (error != null) {
             // if string returned from validator, throw exception
+            System.err.println("credentials invalid");
             throw new ValidationException(error);
+
         }
 
         // get the hashed password for

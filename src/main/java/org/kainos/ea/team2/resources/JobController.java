@@ -44,6 +44,7 @@ public class JobController {
                     entity(jobService.getJobs()).build();
         } catch (FailedToGetException e) {
             // status code 500 if internal server error
+            System.err.println("500 internal in controller");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
                     entity(e.getMessage()).build();
         }
@@ -68,6 +69,7 @@ public class JobController {
             return Response.status(Response.Status.OK).
                     entity(jobService.getJobSpec(id)).build();
         } catch (FailedToGetException e) {
+            System.err.println("500 internal error in job spec controller");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
                     entity(e.getMessage()).build();
         } catch (JobDoesNotExistException e) {
