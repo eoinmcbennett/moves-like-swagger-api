@@ -16,8 +16,10 @@ public interface IJobDAO {
     List<Job> getJobs() throws FailedToGetException;
 
     /**
-     * Interface of job dao class, returns job spec, sharepoint link and responsibilities from db.
-     * @param id job id of returned job spec, sharepoint link and responsibilities
+     * Interface of job dao class.
+     * Returns job spec, sharepoint link and responsibilities from db.
+     * @param id job id of returned job spec, sharepoint link
+     *           and responsibilities
      * @return JobSpecificationResponse
      * @throws FailedToGetException if sql error thrown in dao
      */

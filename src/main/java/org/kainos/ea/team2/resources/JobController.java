@@ -45,7 +45,8 @@ public class JobController {
 
     /**
      * endpoint to get list of jobs from database.
-     * @param id job id of job with returned spec, sharepoint link and responsibilities
+     * @param id job id of job with returned spec, sharepoint link
+     * and responsibilities of job role.
      * @return Response with appropriate status code and body.
      * Status code 200 if request successful and list non-empty.
      * Status code 500 if internal server error.

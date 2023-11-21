@@ -35,7 +35,8 @@ public class JobDao implements IJobDAO {
                     + "Capabilities.capability_name FROM JobRoles "
                     + "INNER JOIN JobFamilies ON JobRoles.job_family_id="
                     + "JobFamilies.job_family_id INNER JOIN Capabilities "
-                    + "ON JobFamilies.capability_id=Capabilities.capability_id;";
+                    + "ON JobFamilies.capability_id="
+                    + "Capabilities.capability_id;";
 
             // prepare sql statement
             PreparedStatement preparedStatement =
@@ -64,9 +65,11 @@ public class JobDao implements IJobDAO {
     }
 
     /**
-     * Calls to the dao to return job spec, sharepoint link and responsibilities
+     * Calls to the dao to return
+     * job spec, sharepoint link and responsibilities
      * from the job and responsibilities table in the database.
-     * @param id job id of returned job spec, sharepoint link and responsibility description
+     * @param id job id of returned job spec, sharepoint link
+     *           and responsibility description
      * @return JobSpecificationResponse
      * @throws FailedToGetException if a sql error is thrown.
      */
@@ -78,13 +81,18 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // SQL string to fetch job details and responsibilities
-            String sqlString = "SELECT JobRoles.job_name, JobRoles.job_specification, JobRoles.sharepoint_link, " +
-                    "GROUP_CONCAT(Responsibilities.responsibility_description SEPARATOR ', ') AS responsibilities_list " +
-                    "FROM JobRoles " +
-                    "LEFT JOIN JobResponsibilities ON JobRoles.job_id = JobResponsibilities.job_id " +
-                    "LEFT JOIN Responsibilities ON JobResponsibilities.responsibility_id = Responsibilities.responsibility_id " +
-                    "WHERE JobRoles.job_id = ? " +
-                    "GROUP BY JobRoles.job_id;";
+            String sqlString =
+                    "SELECT jr.job_name, jr.job_specification, "
+                    + "jr.sharepoint_link, "
+                    + "GROUP_CONCAT(r.responsibility_desc SEPARATOR ', ') "
+                    + "AS responsibilities_list "
+                    + "FROM JobRoles jr "
+                    + "LEFT JOIN JobResponsibilities jresp "
+                    + "ON jr.job_id = jresp.job_id "
+                    + "LEFT JOIN Responsibilities r "
+                    + "ON jresp.responsibility_id = r.responsibility_id "
+                    + "WHERE jr.job_id = ? "
+                    + "GROUP BY jr.job_id;";
 
             // Prepare statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);
@@ -95,8 +103,10 @@ public class JobDao implements IJobDAO {
 
             // Create and return job spec response object with rows returned
             while (resultSet.next()) {
-                String responsibilitiesString = resultSet.getString("responsibilities_list");
-                List<String> responsibilitiesList = Arrays.asList(responsibilitiesString.split(", "));
+                String responsString =
+                        resultSet.getString("responsibilities_list");
+                List<String> responsibilitiesList =
+                        Arrays.asList(responsString.split(", "));
                 return new JobSpecificationResponse(
                         resultSet.getString("job_name"),
                         resultSet.getString("job_specification"),

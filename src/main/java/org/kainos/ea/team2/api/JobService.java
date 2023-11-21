@@ -38,7 +38,8 @@ public class JobService {
      * calls to job dao to get job spec summary
      * sharepoint link and responsibilities for job with given id from db.
      * @param id of job role
-     * @return JobSpecificationResponse job spec, sharepoint link and responsibilities of job
+     * @return JobSpecificationResponse job spec, sharepoint link
+     * and responsibilities of job.
      * @throws FailedToGetException if sql exception thrown in dao
      * @throws JobDoesNotExistException if no data returned from dao
      * i.e. job with given id doesn't exist

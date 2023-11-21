@@ -28,8 +28,9 @@ public class JobSpecificationResponse {
     // constructor
 
     /**
-     * Constructor with args - creates a job specification response
-     * with a job name, job spec summary, sharepoint link and responsibilities
+     * Constructor with args - creates a job specification response.
+     * Response with a job name, job spec summary, sharepoint link
+     * and job role responsibilities
      * @param jobName
      * @param jobSpecification
      * @param sharepointLink
@@ -110,8 +111,8 @@ public class JobSpecificationResponse {
      * Set job responsibilities.
      * @param responsibilitiesList
      */
-    public void setResponsibilitiesList(List<String> responsibilitiesList) {
-
+    public void setResponsibilitiesList(
+            final List<String> responsibilitiesList) {
         this.responsibilitiesList = responsibilitiesList;
     }
 }
