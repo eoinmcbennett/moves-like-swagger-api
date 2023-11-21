@@ -1,0 +1,41 @@
+-- Use Database --
+
+USE MovesLikeSwagger_MeganM;
+
+-- Create table for job families--
+
+CREATE TABLE JobFamilies (
+job_family_id int PRIMARY KEY AUTO_INCREMENT,
+job_family_name VARCHAR (100),
+capability_id int
+);
+
+-- Insert data into table --
+
+INSERT INTO JobFamilies (job_family_name, capability_id)
+VALUES("Engineering Strategy and Planning", 1),("Engineering", 1),("Architecture",1),
+("Testing and Quality Assurance",1),("Product Specialist",1),("Experience Design",2),
+("Context Design",2),("UX/Visual Design",2),("Service Design",2),("Security Strategy and Planning",3),
+("Security Engineering",3),("Corporate Security",3);
+
+-- Remove foreign key constraint and capabilities column from JobRoles table --
+
+ALTER TABLE JobRoles DROP CONSTRAINT JobRoles_ibfk_1;
+ALTER TABLE JobRoles DROP COLUMN capability_id;
+
+-- Add foreign key constraint between JobFamilies and Capabilities tables --
+
+ALTER TABLE JobFamilies ADD FOREIGN KEY (capability_id) REFERENCES Capabilities(capability_id);
+
+-- Add job family ID column to the JobRoles table and use this as foreign key for Capabilities --
+
+ALTER TABLE JobRoles ADD job_family_id int;
+ALTER TABLE JobRoles ADD FOREIGN KEY (job_family_id) REFERENCES JobFamilies(job_family_id);
+
+-- Update previous rows to include job family ID --
+
+UPDATE JobRoles SET job_name="Software Engineer", job_family_id =2 WHERE job_id=1;
+UPDATE JobRoles SET job_name="Support Technician", job_family_id =2 WHERE job_id=2;
+UPDATE JobRoles SET job_name="Front-End Engineer", job_family_id =2 WHERE job_id=3;
+UPDATE JobRoles SET job_family_id =8 WHERE job_id=4;
+UPDATE JobRoles SET job_family_id =11 WHERE job_id=5;

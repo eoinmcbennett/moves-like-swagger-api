@@ -4,11 +4,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kainos.ea.team2.cli.CreateJob;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.db.IJobDAO;
 import org.kainos.ea.team2.db.JobDao;
+import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
+import org.kainos.ea.team2.exception.InvalidJobException;
 import org.kainos.ea.team2.exception.JobDoesNotExistException;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,6 +35,9 @@ public class JobServiceTest {
     // create instance of job service class (being tested)
     private static JobService jobService;
 
+    //create instance of create job class to test
+    private static CreateJob job;
+
     /**
      * Initialise variables before each test is run.
      */
@@ -42,6 +48,16 @@ public class JobServiceTest {
 
         // initialise job service class (being tested)
         jobService = new JobService(jobDao);
+
+        //initialise job details to test
+        job = new CreateJob(
+                "Farmer",
+                "Farming",
+                "www.farm.com",
+                2,
+                2
+        );
+
     }
 
     /**
@@ -55,7 +71,7 @@ public class JobServiceTest {
         // create jobs
         Job job1 = new Job(1, "Software Engineer", "Engineering");
         Job job2 = new Job(2, "QA Tester", "Engineering");
-        Job job3 = new Job(2, "Security Engineer", "Cyber Security");
+        Job job3 = new Job(3, "Security Engineer", "Cyber Security");
 
         // create array list of jobs
         List<Job> testJobs = new ArrayList<>();
@@ -169,5 +185,15 @@ public class JobServiceTest {
         // check job does not exist exception thrown when get job spec method is called
         assertThrows(FailedToGetException.class,
                 () -> jobService.getJobSpec(jobId));
+    }
+
+    @Test
+    void createJob_shouldReturnId_whenDaoReturnsId() throws SQLException, InvalidJobException, FailedToCreateJobException {
+        int expectedResult =1;
+        Mockito.when(jobDao.createJob(job)).thenReturn(expectedResult);
+
+        int result = jobService.createJob(job);
+
+        assertEquals(result, expectedResult);
     }
 }

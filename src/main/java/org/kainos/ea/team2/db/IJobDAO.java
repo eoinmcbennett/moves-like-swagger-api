@@ -1,9 +1,11 @@
 package org.kainos.ea.team2.db;
 
+import org.kainos.ea.team2.cli.CreateJob;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.exception.FailedToGetException;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IJobDAO {
@@ -22,4 +24,13 @@ public interface IJobDAO {
      * @throws FailedToGetException if sql error thrown in dao
      */
     JobSpecificationResponse getJobSpec(int id) throws FailedToGetException;
+
+    /**
+     * Interface of job dao class, inserts data to db and returns
+     * id for new row.
+     * @param job (job name, spec, sharepoint, band level ID and job family ID)
+     * @return jobiD
+     * @throws SQLException
+     */
+    int createJob(CreateJob job) throws SQLException;
 }

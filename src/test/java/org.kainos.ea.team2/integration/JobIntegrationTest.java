@@ -2,6 +2,7 @@ package org.kainos.ea.team2.integration;
 
 import org.kainos.ea.team2.MovesLikeSwaggerApplication;
 import org.kainos.ea.team2.MovesLikeSwaggerConfiguration;
+import org.kainos.ea.team2.cli.CreateJob;
 import org.kainos.ea.team2.cli.Job;
 
 import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -41,7 +44,7 @@ public class JobIntegrationTest {
         // check that the list of jobs is non-empty
         Assertions.assertTrue(response.size() > 0);
 
-     }
+    }
 
     /**
      * Verify that the getJobSpec method returns a JobSpecificationResponse.
@@ -55,7 +58,7 @@ public class JobIntegrationTest {
                 .get();
 
         // check status code 200 returned
-        Assertions.assertEquals(200,response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
 
         // check response entity is not null
         Assertions.assertNotNull(response.getEntity());
@@ -76,10 +79,122 @@ public class JobIntegrationTest {
                 .get();
 
         // check status code 404 returned
-        Assertions.assertEquals(404,response.getStatus());
+        Assertions.assertEquals(404, response.getStatus());
 
         // check response entity is not null
         Assertions.assertEquals("Job does not exist.", response.readEntity(String.class));
 
     }
+
+    /**
+     * Verify that the createJob method returns the ID of the job created.
+     */
+    @Test
+    void createJob_shouldReturnIdOfJob() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                "Driver",
+                "Drives bus",
+                "www.bus.com",
+                1,
+                6
+
+        );
+
+        int id = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE))
+                .readEntity(Integer.class);
+
+        Assertions.assertNotNull(id);
+        Assertions.assertNotEquals(-1, id);
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(200, response.getStatus());
     }
+
+    @Test
+    void createJob_shouldReturn400Error_whenJobNameIsAnEmptyString() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                "",
+                "Drives bus",
+                "www.bus.com",
+                1,
+                6
+
+        );
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    void createJob_shouldReturn400Error_whenJobSpecificationIsAnEmptyString() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                "Driver",
+                "",
+                "www.bus.com",
+                1,
+                6
+
+        );
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    void createJob_shouldReturn400Error_whenSharepointLinkIsAnEmptyString() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                "Driver",
+                "Drives Bus",
+                "",
+                1,
+                6
+
+        );
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    void createJob_shouldReturn400Error_whenJobNameHasTooManyChars() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                "abpwtupudmdhxsilqzppyvqdnmnmlkzdclvvoafueluqimgttkjhbqzvntlishfysivlxefzjgbnmoxvlq",
+                "Drives Bus",
+                "www.bus.com",
+                1,
+                6
+
+        );
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+}

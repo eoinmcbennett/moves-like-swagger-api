@@ -2,16 +2,21 @@ package org.kainos.ea.team2.resources;
 
 import io.swagger.annotations.Api;
 import org.kainos.ea.team2.api.JobService;
+import org.kainos.ea.team2.cli.CreateJob;
 import org.kainos.ea.team2.db.JobDao;
+import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
+import org.kainos.ea.team2.exception.InvalidJobException;
 import org.kainos.ea.team2.exception.JobDoesNotExistException;
-
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.GET;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+
 
 @Path("/api")
 @Api("Moves Like Swagger API")
@@ -64,6 +69,32 @@ public class JobController {
                     entity(e.getMessage()).build();
         } catch (JobDoesNotExistException e) {
             return Response.status(Response.Status.NOT_FOUND).
+                    entity(e.getMessage()).build();
+        }
+    }
+
+    /**
+     * endpoint to add new job role to database.
+     * @param job (job name, spec, sharepoint, band level ID and job family ID)
+     * @return Response with appropriate status code and body.
+     * Status code 200 if request successful.
+     * Status code 500 if internal server error.
+     * Status code 400 if invalid data.
+     */
+    @POST
+    @Path("/create-job")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createJob(final CreateJob job) {
+        try {
+            // call to jobs service to return generated job ID
+            return Response.ok(jobService.createJob(job)).build();
+        } catch (FailedToCreateJobException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                    entity(e.getMessage()).build();
+        } catch (InvalidJobException e) {
+            System.err.println(e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).
                     entity(e.getMessage()).build();
         }
     }

@@ -1,17 +1,48 @@
 package org.kainos.ea.team2.db;
 
+import org.kainos.ea.team2.cli.CreateJob;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.exception.FailedToGetException;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JobDao implements IJobDAO {
+
+    /**
+     * Constant to assign value 1 for use in
+     * prepared statement to avoid use of magic numbers.
+     */
+    public static final int VAL_1 = 1;
+
+    /**
+     * Constant to assign value 2 for use in
+     * prepared statement to avoid use of magic numbers.
+     */
+    public static final int VAL_2 = 2;
+
+    /**
+     * Constant to assign value 3 for use in
+     * prepared statement to avoid use of magic numbers.
+     */
+    public static final int VAL_3 = 3;
+
+    /**
+     * Constant to assign value 4 for use in
+     * prepared statement to avoid use of magic numbers.
+     */
+    public static final int VAL_4 = 4;
+
+    /**
+     * Constant to assign value 5 for use in
+     * prepared statement to avoid use of magic numbers.
+     */
+    public static final int VAL_5 = 5;
 
     /**
      * Calls to the dao to return a list of jobs
@@ -31,12 +62,14 @@ public class JobDao implements IJobDAO {
 
             // sql string
             String sqlString = "SELECT job_id, job_name, "
-                    + "Capabilities.capability_name "
-                    + "FROM JobRoles INNER JOIN Capabilities ON "
-                    + "JobRoles.capability_id=Capabilities.capability_id;";
+            + "Capabilities.capability_name FROM JobRoles "
+            + "INNER JOIN JobFamilies ON JobRoles.job_family_id="
+            + "JobFamilies.job_family_id INNER JOIN Capabilities "
+            + "ON JobFamilies.capability_id=Capabilities.capability_id;";
 
             // prepare sql statement
-            PreparedStatement preparedStatement = c.prepareStatement(sqlString);
+            PreparedStatement preparedStatement =
+                    c.prepareStatement(sqlString);
 
             // execute statement
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -100,7 +133,54 @@ public class JobDao implements IJobDAO {
             return null;
 
         } catch (SQLException e) {
-            throw new FailedToGetException("Failed to get job.");
+            throw new FailedToGetException("Failed to get jobs.");
         }
+
+    }
+
+    /**
+     * Calls to the dao to inserts data to the job role table in the
+     * db and returns id for new row.
+     * @param job (job name, spec, sharepoint, band level ID and job family ID)
+     * @return jobId
+     * @throws SQLException
+     */
+    public int createJob(final CreateJob job) throws SQLException {
+
+            // establish connection with db
+            Connection c = DatabaseConnector.getConnection();
+
+            // sql string
+            String insertStatement = "INSERT INTO JobRoles(job_name, "
+                    + "job_specification, sharepoint_link, bandlevel_id, "
+                    + "job_family_id) VALUES (?, ?, ?, ?, ?);";
+
+            // prepare statement
+            PreparedStatement st = c.prepareStatement(insertStatement,
+                    Statement.RETURN_GENERATED_KEYS);
+
+
+
+            //assign values to prepared statement
+            st.setString(VAL_1, job.getJobName());
+            st.setString(VAL_2, job.getJobSpecification());
+            st.setString(VAL_3, job.getSharepointLink());
+            st.setInt(VAL_4, job.getJobBandLevelId());
+            st.setInt(VAL_5, job.getJobFamilyId());
+
+            //execute query
+            st.executeUpdate();
+
+            //retrieve result
+            ResultSet rs = st.getGeneratedKeys();
+
+            //if row created return the ID
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+            //otherwise return -1
+            return -1;
+
     }
 }

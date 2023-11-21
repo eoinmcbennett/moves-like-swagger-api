@@ -1,11 +1,16 @@
 package org.kainos.ea.team2.api;
 
+import org.kainos.ea.team2.cli.CreateJob;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
+import org.kainos.ea.team2.client.CreateJobValidator;
 import org.kainos.ea.team2.db.IJobDAO;
+import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
+import org.kainos.ea.team2.exception.InvalidJobException;
 import org.kainos.ea.team2.exception.JobDoesNotExistException;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class JobService {
@@ -16,12 +21,14 @@ public class JobService {
     private IJobDAO jobDao;
 
     /**
-     * create instance of jobservice class using jobdao interface.
+     * create instance of job service class using job dao interface.
      * @param jobDao
      */
     public JobService(final IJobDAO jobDao) {
         this.jobDao = jobDao;
     }
+
+    public CreateJobValidator jobValidator= new CreateJobValidator();
 
     /**
      * calls to dao to return a list of jobs from database.
@@ -57,5 +64,42 @@ public class JobService {
 
         // if non-null, return response from dao
         return jobSpecificationResponse;
+    }
+
+    /**
+     * Calls to the dao to inserts data to the job role table in the
+     * db and returns id for new row.
+     * @param job (job name, spec, sharepoint, band level ID and job family ID)
+     * @return jobId
+     * @throws FailedToCreateJobException if sql exception thrown in dao
+     * @throws InvalidJobException if job input is invalid
+     */
+    public int createJob(final CreateJob job) throws
+            FailedToCreateJobException, InvalidJobException {
+        try {
+
+            //assign DAO response to id variable
+            int id = jobDao.createJob(job);
+
+            String validation= jobValidator.validate(job);
+
+            //if input does not meet validation rules, throw exception
+            if(validation!=null) {
+                throw new InvalidJobException(validation);
+            }
+
+            //if -1, the job has not been added to db, throw exception
+            if (id == -1) {
+                throw new FailedToCreateJobException();
+            }
+
+            //otherwise return the generated id
+            return id;
+
+            //catch SQL exception and throw the appropriate message
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new FailedToCreateJobException();
+        }
     }
 }
