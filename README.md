@@ -11,7 +11,7 @@ Config
 ---
 1. The following environment variables need to be set to enable database connection:
 ```
-DB_USERNAME
+DB_USER
 DB_PASSWORD
 DB_HOST
 DB_NAME
@@ -48,3 +48,10 @@ In order to check your code with the linter locally. Run `mvn checkstyle:check -
 
 Tests
 ---
+The following environment variables need to be set to perform integration tests of the login system.
+Make sure these are set to valid login credentials
+```
+TEST_VALID_USERNAME
+TEST_VALID_PASSWORD
+```
+1. Run `mvn clean test` to run all tests (ensure the application is ***not*** running before attempting to run tests)
