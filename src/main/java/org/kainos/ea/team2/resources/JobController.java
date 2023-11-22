@@ -36,7 +36,7 @@ public class JobController {
     @GET
     @Path("/job-roles")
     @Produces(MediaType.APPLICATION_JSON)
-    @Authorise // user and admin route
+    @Authorise// user and admin route
     public Response getJobs() {
         try {
             // call to jobs service to return list of jobs
@@ -60,7 +60,7 @@ public class JobController {
     @GET
     @Path("/job-specification/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Authorise // user and admin route
+    @Authorise(requireAdmin = true)
     public Response getJobSpec(
             @PathParam("id") final int id) {
         try {
