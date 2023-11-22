@@ -1,50 +1,65 @@
 package org.kainos.ea.team2.cli;
 
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Describes a band level within the system.
- */
 public class BandLevel {
-    /**
-     * The id of the band level.
-     */
-    private final int bandLevelId;
 
     /**
-     * The name of the band level.
+     * ID of band level.
      */
-    private final String bandName;
+    private int bandLevelId;
 
     /**
-     * Creates a new band level object.
-     * @param bandLevelId the id of the band level
-     * @param bandName the name of the band level
+     * name of band level.
+     */
+    private String bandLevelName;
+
+    /**
+     * Constructor with args - creates a band level with a name and id.
+     * @param bandLevelId
+     * @param bandLevelName
      */
     @JsonCreator
-    public BandLevel(
-            @JsonProperty("bandlevel_id") final int bandLevelId,
-            @JsonProperty("band_name") final String bandName
-    ) {
+    public BandLevel(@JsonProperty("jobId") final int bandLevelId,
+               @JsonProperty("jobName") final String bandLevelName) {
         this.bandLevelId = bandLevelId;
-        this.bandName = bandName;
+        this.bandLevelName = bandLevelName;
     }
 
     /**
-     * Gets the id of the band level.
-     * @return the id of the band level
+     * get ID of band level.
+     * @return int bandLevelID
      */
     public int getBandLevelId() {
         return bandLevelId;
     }
 
     /**
-     * Gets the name of the band level.
-     * @return the name of the band level
+     * set ID of bandLevel.
+     * @param bandLevelId
      */
-    public String getBandName() {
-        return bandName;
+    public void setBandLevelId(final int bandLevelId) {
+
+        this.bandLevelId = bandLevelId;
     }
+
+    /**
+     * get name of band level.
+     * @return String bandLevelName
+     */
+    public String getBandLevelName() {
+        return bandLevelName;
+    }
+
+    /**
+     * set name of band level.
+     * @param bandLevelName
+     */
+    public void setBandLevelName(final String bandLevelName) {
+
+        this.bandLevelName = bandLevelName;
+    }
+
+
 }

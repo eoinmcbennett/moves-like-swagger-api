@@ -1,7 +1,12 @@
 package org.kainos.ea.team2.db;
 
+
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
+import org.kainos.ea.team2.cli.CreateJob;
+import org.kainos.ea.team2.cli.BandLevel;
+import org.kainos.ea.team2.cli.JobFamily;
+import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
 import org.kainos.ea.team2.exception.JobDoesNotExistException;
 
@@ -24,6 +29,28 @@ public interface IJobDAO {
      */
     JobSpecificationResponse getJobSpec(int id) throws FailedToGetException;
 
+    /**
+     * Interface of job dao class, inserts data to db and returns
+     * id for new row.
+     * @param job (job name, spec, sharepoint, band level ID and job family ID)
+     * @return jobiD
+     * @throws FailedToCreateJobException
+     */
+    int createJob(CreateJob job) throws FailedToCreateJobException;
+
+    /**
+     * Interface of job dao class, returns list of band levels from db.
+     * @return List of type BandLevel
+     * @throws FailedToGetException if sql error thrown in dao
+     */
+    List<BandLevel> getBandLevels() throws FailedToGetException;
+
+    /**
+     * Interface of job dao class, returns list of jobFamilies from db.
+     * @return List of type JobFamily
+     * @throws FailedToGetException if sql error thrown in dao
+     */
+    List<JobFamily> getJobFamilies() throws FailedToGetException;
     /**
      * Interface of job dao class, deletes a job from the database.
      * @param jobID The ID of the job to delete

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Job object contains attributes of jobId and jobName.
+ * Job object contains attributes of jobId, jobName and jobCapabilityName.
  */
 public class Job {
     /**
