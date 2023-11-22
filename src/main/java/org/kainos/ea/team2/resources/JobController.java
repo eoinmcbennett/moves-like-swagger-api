@@ -81,7 +81,6 @@ public class JobController {
 
     /**
      * endpoint to add new job role to database.
-     * 
      * @param job (job name, spec, sharepoint, band level ID and job family ID)
      * @return Response with appropriate status code and body.
      * Status code 200 if request successful.
@@ -109,7 +108,6 @@ public class JobController {
 
     /**
      * endpoint to get list of band levels from database.
-     *
      * @return Response with appropriate status code and body.
      * Status code 200 if request successful and list non-empty.
      * Status code 500 if internal server error.
@@ -150,8 +148,7 @@ public class JobController {
                     entity(e.getMessage()).build();
         }
     }
-
-    /** 
+    /**
      * Endpoint to delete a job from the database.
      * @param jobID The ID of the job to delete.
      * @return Response with appropriate status code and body.

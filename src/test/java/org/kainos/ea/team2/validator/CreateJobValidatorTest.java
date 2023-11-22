@@ -127,4 +127,34 @@ public class CreateJobValidatorTest {
 
         assertEquals(expected, validator.validate(job));
     }
+
+    @Test
+    public void isInvalidJob_shouldReturnMessage_whenInvalidBandLevelId() {
+
+        CreateJob job = new CreateJob(
+                "Director",
+                "Makes Movies",
+                "www.movies.com",
+                0,
+                4
+        );
+        String expected="The band level does not exist";
+
+        assertEquals(expected, validator.validate(job));
+    }
+
+    @Test
+    public void isInvalidJob_shouldReturnMessage_whenInvalidJobFamilyId() {
+
+        CreateJob job = new CreateJob(
+                "Director",
+                "Makes Movies",
+                "www.movies.com",
+                1,
+                0
+        );
+        String expected="The job family does not exist";
+
+        assertEquals(expected, validator.validate(job));
+    }
 }

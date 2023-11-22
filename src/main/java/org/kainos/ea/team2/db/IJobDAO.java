@@ -51,8 +51,7 @@ public interface IJobDAO {
      * @throws FailedToGetException if sql error thrown in dao
      */
     List<JobFamily> getJobFamilies() throws FailedToGetException;
-
-    /** 
+    /**
      * Interface of job dao class, deletes a job from the database.
      * @param jobID The ID of the job to delete
      * @throws FailedToGetException If SQL error occurs in the DAO

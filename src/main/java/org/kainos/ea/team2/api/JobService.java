@@ -136,8 +136,7 @@ public class JobService {
         // call to job dao
         return jobDao.getJobFamilies();
     }
-    
-    /** 
+    /**
      * Calls the JobDao to delete a job with a specified JobID.
      * @param jobID
      */

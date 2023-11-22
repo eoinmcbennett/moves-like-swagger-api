@@ -4,7 +4,6 @@ import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.cli.CreateJob;
-import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.JobFamily;
 import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
