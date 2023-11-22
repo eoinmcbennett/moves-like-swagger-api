@@ -121,7 +121,7 @@ public class JobServiceTest {
     void whenGetJobSpecCalled_shouldReturnJobSpec() throws FailedToGetException, JobDoesNotExistException {
 
         // create a job spec request to be returned
-        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse("job name","test job specification","https://kainos-sharepoint/job/1");
+        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse("job name","test job specification","https://kainos-sharepoint/job/1", Collections.singletonList("Responsibility1, Responsibility2"));
 
         // id of job we want to find spec of
         int jobId = 1;
