@@ -91,13 +91,15 @@ public class JobDao implements IJobDAO {
             String sqlString =
                     "SELECT jr.job_name, jr.job_specification, "
                             + "jr.sharepoint_link, "
-                            + "GROUP_CONCAT(r.responsibility_desc SEPARATOR ', ') "
+                            + "GROUP_CONCAT(r.responsibility_desc "
+                            + "SEPARATOR ', ') "
                             + "AS responsibilities_list "
                             + "FROM JobRoles jr "
                             + "LEFT JOIN JobResponsibilities jresp "
                             + "ON jr.job_id = jresp.job_id "
                             + "LEFT JOIN Responsibilities r "
-                            + "ON jresp.responsibility_id = r.responsibility_id "
+                            + "ON jresp.responsibility_id = "
+                            + "r.responsibility_id "
                             + "WHERE jr.job_id = ? "
                             + "GROUP BY jr.job_id;";
 
