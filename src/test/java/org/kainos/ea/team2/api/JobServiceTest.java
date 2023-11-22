@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.db.IJobDAO;
@@ -30,6 +31,7 @@ public class JobServiceTest {
     // create instance of jobdao class
     private static IJobDAO jobDao;
 
+
     // create instance of job service class (being tested)
     private static JobService jobService;
 
@@ -54,14 +56,16 @@ public class JobServiceTest {
     void whenGetJobsCalled_jobServicesReturnsListOfJobs() throws FailedToGetException, SQLException {
 
         // create jobs
-        Job job1 = new Job(1, "Software Engineer", "Engineering");
-        Job job2 = new Job(2, "QA Tester", "Engineering");
+        Job job1 = new Job(1, "Software Engineer","Engineering", new BandLevel(1,"Trainee"));
+        Job job2 = new Job(2, "QA Tester","Engineering",new BandLevel(1,"Trainee"));
+        Job job3 = new Job(2, "Security Engineer", "Cyber Security", new BandLevel(1,"Associate"));
 
         // create array list of jobs
         List<Job> testJobs = new ArrayList<>();
         // add jobs to array list
         testJobs.add(job1);
         testJobs.add(job2);
+        testJobs.add(job3);
 
         // specify return of jobs when dao is called
         Mockito.when(jobDao.getJobs()).thenReturn(testJobs);
@@ -109,7 +113,7 @@ public class JobServiceTest {
 
     /**
      * Testing getJobSpec method.
-     * Verifies that job service returns the job spec, sharepoint link
+     * Verifies that job service returns the job spec and sharepoint link
      * and job responsibilities
      * when the dao returns these from db.
      */
@@ -117,7 +121,7 @@ public class JobServiceTest {
     void whenGetJobSpecCalled_shouldReturnJobSpec() throws FailedToGetException, JobDoesNotExistException {
 
         // create a job spec request to be returned
-        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse("job name","test job specification","https://kainos-sharepoint/job/1", Collections.singletonList("Responsibility1, Responsibility2"));
+        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse("job name","test job specification","https://kainos-sharepoint/job/1");
 
         // id of job we want to find spec of
         int jobId = 1;

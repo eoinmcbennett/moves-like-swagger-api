@@ -1,5 +1,6 @@
 package org.kainos.ea.team2.db;
 
+import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.exception.FailedToGetException;
@@ -9,8 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 public class JobDao implements IJobDAO {
 
@@ -32,26 +33,30 @@ public class JobDao implements IJobDAO {
 
             // sql string
             String sqlString = "SELECT job_id, job_name, "
-                    + "Capabilities.capability_name FROM JobRoles "
-                    + "INNER JOIN JobFamilies ON JobRoles.job_family_id="
-                    + "JobFamilies.job_family_id INNER JOIN Capabilities "
-                    + "ON JobFamilies.capability_id="
-                    + "Capabilities.capability_id;";
+                    + "bandlevel_id, band_name, capability_name "
+                    + "FROM JobRoles JOIN BandLevel USING(bandlevel_id) "
+                    + "INNER JOIN Capabilities USING(capability_id);";
 
             // prepare sql statement
-            PreparedStatement preparedStatement =
-                    c.prepareStatement(sqlString);
+            PreparedStatement preparedStatement = c.prepareStatement(sqlString);
 
             // execute statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
             // add each returned row to jobList
             while (resultSet.next()) {
-                // create new job
-                Job job = new Job(resultSet.getInt("job_id"),
+                BandLevel level = new BandLevel(
+                        resultSet.getInt("bandlevel_id"),
+                        resultSet.getString("band_name")
+                );
+
+                Job job = new Job(
+                        resultSet.getInt("job_id"),
                         resultSet.getString("job_name"),
-                        resultSet.getString("capability_name"));
-                // add new job to list
+                        resultSet.getString("capability_name"),
+                        level
+                );
+
                 jobList.add(job);
             }
 
@@ -83,16 +88,16 @@ public class JobDao implements IJobDAO {
             // SQL string to fetch job details and responsibilities
             String sqlString =
                     "SELECT jr.job_name, jr.job_specification, "
-                    + "jr.sharepoint_link, "
-                    + "GROUP_CONCAT(r.responsibility_desc SEPARATOR ', ') "
-                    + "AS responsibilities_list "
-                    + "FROM JobRoles jr "
-                    + "LEFT JOIN JobResponsibilities jresp "
-                    + "ON jr.job_id = jresp.job_id "
-                    + "LEFT JOIN Responsibilities r "
-                    + "ON jresp.responsibility_id = r.responsibility_id "
-                    + "WHERE jr.job_id = ? "
-                    + "GROUP BY jr.job_id;";
+                            + "jr.sharepoint_link, "
+                            + "GROUP_CONCAT(r.responsibility_desc SEPARATOR ', ') "
+                            + "AS responsibilities_list "
+                            + "FROM JobRoles jr "
+                            + "LEFT JOIN JobResponsibilities jresp "
+                            + "ON jr.job_id = jresp.job_id "
+                            + "LEFT JOIN Responsibilities r "
+                            + "ON jresp.responsibility_id = r.responsibility_id "
+                            + "WHERE jr.job_id = ? "
+                            + "GROUP BY jr.job_id;";
 
             // Prepare statement
             PreparedStatement preparedStatement = c.prepareStatement(sqlString);

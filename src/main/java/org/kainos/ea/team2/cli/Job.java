@@ -3,43 +3,53 @@
  */
 package org.kainos.ea.team2.cli;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Job object contains attributes of jobId and jobName.
  */
 public class Job {
-
-    // instance vars
-
-    /**
-     * Name of job.
-     */
-    private String jobName;
-
     /**
      * id of job.
      */
     private int jobId;
 
     /**
-     * Name of capability.
+     * name of job.
      */
-    private String capabilityName;
+    private String jobName;
 
     /**
-     * Constructor with args.
-     * Creates a job with a name and id.
-     * @param jobId
-     * @param jobName
-     * @param capabilityName
+     * capability of job.
      */
-    public Job(
-            final int jobId,
-            final String jobName,
-            final String capabilityName) {
-        this.jobName = jobName;
+    private String jobCapabilityName;
+
+    /**
+     * The band level of the position.
+     */
+    private BandLevel bandLevel;
+
+
+    /**
+     * Constructor with args - creates a job with a name and id.
+     * @param jobId the id of the job
+     * @param jobName the name of the job
+     * @param jobCapabilityName the capability the job belongs to.
+     * @param bandLevel the band level the job is in
+     */
+    @JsonCreator
+    public Job(@JsonProperty("jobId") final int jobId,
+               @JsonProperty("jobName") final String jobName,
+               @JsonProperty("capability_name")
+               final String jobCapabilityName,
+               @JsonProperty("bandLevel") final BandLevel bandLevel) {
         this.jobId = jobId;
-        this.capabilityName = capabilityName;
+        this.jobName = jobName;
+        this.jobCapabilityName = jobCapabilityName;
+        this.bandLevel = bandLevel;
     }
+
 
     // getters and setters
 
@@ -52,14 +62,6 @@ public class Job {
     }
 
     /**
-     * set name of job.
-     * @param jobName String jobName
-     */
-    public void setJobName(final String jobName) {
-        this.jobName = jobName;
-    }
-
-    /**
      * get id of job.
      * @return jobId.
      */
@@ -69,25 +71,49 @@ public class Job {
 
     /**
      * set id of job.
-     * @param jobId
+     * @param jobId the id of the job
      */
     public void setJobId(final int jobId) {
         this.jobId = jobId;
     }
 
     /**
-     * set name of capability.
-     * @param capabilityName
+     * Gets the band level of the position.
+     * @return the band level
      */
-    public void setCapabilityName(final String capabilityName) {
-        this.capabilityName = capabilityName;
+    public BandLevel getBandLevel() {
+        return this.bandLevel;
     }
 
     /**
-     * get name of capability.
-     * @return capabilityName.
+     * set name of job.
+     * @param jobName the name of the job
      */
-    public String getCapabilityName() {
-        return capabilityName;
+    public void setJobName(final String jobName) {
+        this.jobName = jobName;
+    }
+
+    /**
+     * get capability of job.
+     * @return jobId.
+     */
+    public String getJobCapabilityName() {
+        return jobCapabilityName;
+    }
+
+    /**
+     * set capability of job.
+     * @param jobCapabilityName the capability to set
+     */
+    public void setJobCapabilityName(final String jobCapabilityName) {
+        this.jobCapabilityName = jobCapabilityName;
+    }
+
+    /**
+     * Sets the band level for the position.
+     * @param bandLevel the band level object to set
+     */
+    public void setBandLevel(final BandLevel bandLevel) {
+        this.bandLevel = bandLevel;
     }
 }
