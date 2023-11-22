@@ -16,6 +16,7 @@ import org.kainos.ea.team2.db.DatabaseConnector;
 
 import javax.ws.rs.core.Response;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -106,17 +107,16 @@ public class JobIntegrationTest {
 
     @Test
     void deleteJob_shouldReturnStatusCode204WhenJobIsSuccessfullyDeleted() throws SQLException {
-
         // Get DB connection
         Connection c = DatabaseConnector.getConnection();
 
         // Insert a new job into the DB so we can delete it for this test case
-        String sqlString =
+        String sqlStringJob =
                 "INSERT INTO JobRoles (job_name, job_specification, sharepoint_link, bandlevel_id, job_family_id)" +
-                " VALUES ('test', 'test', 'test', 1, 1)";
+                        " VALUES ('testJob', 'testSpec', 'testLink', 1, 1)";
 
         Statement statement = c.createStatement();
-        statement.execute(sqlString, Statement.RETURN_GENERATED_KEYS);
+        statement.execute(sqlStringJob, Statement.RETURN_GENERATED_KEYS);
 
         // Get the ID of the newly inserted job
         int returnedID;
@@ -128,14 +128,24 @@ public class JobIntegrationTest {
             throw new SQLException("Failed to insert the test job");
         }
 
+        // Insert responsibilities associated with the job into JobResponsibilities table
+        String sqlStringResponsibilities =
+                "INSERT INTO JobResponsibilities (job_id, responsibility_id) VALUES (?, ?)";
+
+        PreparedStatement preparedStatementResponsibilities = c.prepareStatement(sqlStringResponsibilities);
+        preparedStatementResponsibilities.setInt(1, returnedID);
+        preparedStatementResponsibilities.setInt(2, 1);
+        preparedStatementResponsibilities.executeUpdate();
+
         // call API to delete the newly added job
         Response response = APP.client().target("http://localhost:8080/api/job-roles/" + returnedID)
                 .request()
                 .delete();
 
         // check status code 204 returned
-        Assertions.assertEquals(204,response.getStatus());
+        Assertions.assertEquals(204, response.getStatus());
     }
+
 
     @Test
     void deleteJob_ShouldReturnStatusCode404_whenJobDoesNotExist() {

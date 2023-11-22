@@ -139,22 +139,37 @@ public class JobDao implements IJobDAO {
      * @param jobID
      */
     public void deleteJob(final int jobID) throws FailedToGetException {
-
         try {
             // establish connection with db
             Connection c = DatabaseConnector.getConnection();
 
-            // Create prepared statement for deleting the job
-            String sqlString = "DELETE FROM JobRoles WHERE job_id = ?;";
-            PreparedStatement preparedStatement = c.prepareStatement(sqlString);
-            preparedStatement.setInt(1, jobID);
+            // Create prepared statements for deleting
+            // JobResponsibilities and JobRoles separately
+            String deleteResponsibilitiesSQL =
+                    "DELETE FROM JobResponsibilities WHERE job_id = ?";
+            String deleteJobRolesSQL =
+                    "DELETE FROM JobRoles WHERE job_id = ?";
 
-            // Delete the job
-            preparedStatement.executeUpdate();
+            // Prepare and execute
+            // first DELETE statement (JobResponsibilities)
+            try (PreparedStatement deleteResponsibilitiesStmt =
+                         c.prepareStatement(deleteResponsibilitiesSQL)) {
+                deleteResponsibilitiesStmt.setInt(1, jobID);
+                deleteResponsibilitiesStmt.executeUpdate();
+            }
+
+            // Prepare and execute
+            // second DELETE statement (JobRoles)
+            try (PreparedStatement deleteJobRolesStmt =
+                         c.prepareStatement(deleteJobRolesSQL)) {
+                deleteJobRolesStmt.setInt(1, jobID);
+                deleteJobRolesStmt.executeUpdate();
+            }
 
         } catch (SQLException e) {
-            throw new FailedToGetException("Failed to get job");
+            throw new FailedToGetException("Failed to delete job");
         }
-
     }
+
+
 }
