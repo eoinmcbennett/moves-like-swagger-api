@@ -66,12 +66,6 @@ public class JobDao implements IJobDAO {
 
             // sql string
             String sqlString = "SELECT job_id, job_name, "
-<<<<<<< HEAD
-            + "Capabilities.capability_name FROM JobRoles "
-            + "INNER JOIN JobFamilies ON JobRoles.job_family_id="
-            + "JobFamilies.job_family_id INNER JOIN Capabilities "
-            + "ON JobFamilies.capability_id=Capabilities.capability_id;";
-=======
                     + "capability_name, band_name, BandLevel.bandlevel_id "
                     + "FROM JobRoles "
                     + "INNER JOIN JobFamilies ON "
@@ -81,7 +75,6 @@ public class JobDao implements IJobDAO {
                     + "Capabilities.capability_id "
                     + "INNER JOIN BandLevel ON JobRoles.bandlevel_id = "
                     + "BandLevel.bandlevel_id;";
->>>>>>> origin/main
 
             // prepare sql statement
             PreparedStatement preparedStatement =

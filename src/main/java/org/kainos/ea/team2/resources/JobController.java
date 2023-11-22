@@ -11,16 +11,11 @@ import org.kainos.ea.team2.exception.FailedToGetException;
 import org.kainos.ea.team2.exception.InvalidJobException;
 import org.kainos.ea.team2.exception.JobDoesNotExistException;
 import javax.ws.rs.Path;
-<<<<<<< HEAD
 import javax.ws.rs.GET;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
-=======
-import javax.ws.rs.Produces;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.PathParam;
->>>>>>> origin/main
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -85,9 +80,8 @@ public class JobController {
     }
 
     /**
-<<<<<<< HEAD
      * endpoint to add new job role to database.
-     *
+     * 
      * @param job (job name, spec, sharepoint, band level ID and job family ID)
      * @return Response with appropriate status code and body.
      * Status code 200 if request successful.
@@ -154,7 +148,10 @@ public class JobController {
             // status code 500 if internal server error
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
                     entity(e.getMessage()).build();
-=======
+        }
+    }
+
+    /** 
      * Endpoint to delete a job from the database.
      * @param jobID The ID of the job to delete.
      * @return Response with appropriate status code and body.
@@ -175,7 +172,6 @@ public class JobController {
         } catch (FailedToGetException e) {
             return Response.serverError()
                     .entity(e.getMessage()).build();
->>>>>>> origin/main
         }
     }
 }
