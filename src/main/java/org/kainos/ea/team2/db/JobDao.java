@@ -32,11 +32,11 @@ public class JobDao implements IJobDAO {
 
             // sql string
             String sqlString = "SELECT job_id, job_name, "
-                    + "capability_name, band_name, "
-                    + "BandLevel.bandlevel_id "
-                    + "FROM JobRoles INNER JOIN JobFamilies "
-                    + "ON JobRoles.job_family_id = JobFamilies.job_family_id "
-                    + "INNER JOIN Capabilities "
+                    + "capability_name, band_name, BandLevel.bandlevel_id "
+                    + "FROM JobRoles "
+                    + "INNER JOIN JobFamilies ON "
+                    + "JobRoles.job_family_id = "
+                    + "JobFamilies.job_family_id INNER JOIN Capabilities "
                     + "ON JobFamilies.capability_id = "
                     + "Capabilities.capability_id "
                     + "INNER JOIN BandLevel "
@@ -86,7 +86,7 @@ public class JobDao implements IJobDAO {
             Connection c = DatabaseConnector.getConnection();
 
             // sql string
-            String sqlString = "SELECT job_name, job_specification, "
+            String sqlString = "SELECT job_id, job_name, job_specification, "
                     + "sharepoint_link "
                     + "FROM JobRoles WHERE job_id = ?;";
 
@@ -100,8 +100,9 @@ public class JobDao implements IJobDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             // create and return job spec response object with row returned
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 return new JobSpecificationResponse(
+                        resultSet.getInt("job_id"),
                         resultSet.getString("job_name"),
                         resultSet.getString("job_specification"),
                         resultSet.getString("sharepoint_link"));
@@ -113,5 +114,29 @@ public class JobDao implements IJobDAO {
         } catch (SQLException e) {
             throw new FailedToGetException("Failed to get job.");
         }
+    }
+
+    /**
+     * Deletes a job with a specified JobID from the database.
+     * @param jobID
+     */
+    public void deleteJob(final int jobID) throws FailedToGetException {
+
+        try {
+            // establish connection with db
+            Connection c = DatabaseConnector.getConnection();
+
+            // Create prepared statement for deleting the job
+            String sqlString = "DELETE FROM JobRoles WHERE job_id = ?;";
+            PreparedStatement preparedStatement = c.prepareStatement(sqlString);
+            preparedStatement.setInt(1, jobID);
+
+            // Delete the job
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new FailedToGetException("Failed to get job");
+        }
+
     }
 }
