@@ -8,6 +8,11 @@ import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.JobFamily;
 import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
+<<<<<<< HEAD
+=======
+import org.kainos.ea.team2.exception.JobDoesNotExistException;
+
+>>>>>>> origin/main
 import java.util.List;
 
 public interface IJobDAO {
@@ -28,6 +33,7 @@ public interface IJobDAO {
     JobSpecificationResponse getJobSpec(int id) throws FailedToGetException;
 
     /**
+<<<<<<< HEAD
      * Interface of job dao class, inserts data to db and returns
      * id for new row.
      * @param job (job name, spec, sharepoint, band level ID and job family ID)
@@ -49,4 +55,13 @@ public interface IJobDAO {
      * @throws FailedToGetException if sql error thrown in dao
      */
     List<JobFamily> getJobFamilies() throws FailedToGetException;
+=======
+     * Interface of job dao class, deletes a job from the database.
+     * @param jobID The ID of the job to delete
+     * @throws FailedToGetException If SQL error occurs in the DAO
+     * @throws JobDoesNotExistException If no job with the specified ID exists
+     */
+    void deleteJob(int jobID)
+            throws FailedToGetException, JobDoesNotExistException;
+>>>>>>> origin/main
 }

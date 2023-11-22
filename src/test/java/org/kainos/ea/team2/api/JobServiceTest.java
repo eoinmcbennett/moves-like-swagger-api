@@ -4,13 +4,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.kainos.ea.team2.cli.*;
+import org.kainos.ea.team2.cli.BandLevel;
+import org.kainos.ea.team2.cli.Job;
+import org.kainos.ea.team2.cli.JobSpecificationResponse;
 import org.kainos.ea.team2.db.IJobDAO;
 import org.kainos.ea.team2.db.JobDao;
 import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
 import org.kainos.ea.team2.exception.InvalidJobException;
 import org.kainos.ea.team2.exception.JobDoesNotExistException;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -30,6 +33,7 @@ public class JobServiceTest {
     // create instance of jobdao class
     private static IJobDAO jobDao;
 
+
     // create instance of job service class (being tested)
     private static JobService jobService;
 
@@ -40,7 +44,7 @@ public class JobServiceTest {
      * Initialise variables before each test is run.
      */
     @BeforeEach
-    void setupVars(){
+    void setupVars() {
         // create mock instance of jobdao class
         jobDao = Mockito.mock(JobDao.class);
 
@@ -61,15 +65,16 @@ public class JobServiceTest {
     /**
      * Verify that the correct list of jobs is returned
      * when getJobs method is called in service class.
+     *
      * @throws FailedToGetException if sql error caught
      */
     @Test
     void whenGetJobsCalled_jobServicesReturnsListOfJobs() throws FailedToGetException, SQLException {
 
         // create jobs
-        Job job1 = new Job(1, "Software Engineer", "Engineering");
-        Job job2 = new Job(2, "QA Tester", "Engineering");
-        Job job3 = new Job(3, "Security Engineer", "Cyber Security");
+        Job job1 = new Job(1, "Software Engineer", "Engineering", new BandLevel(1, "Trainee"));
+        Job job2 = new Job(2, "QA Tester", "Engineering", new BandLevel(1, "Trainee"));
+        Job job3 = new Job(2, "Security Engineer", "Cyber Security", new BandLevel(1, "Associate"));
 
         // create array list of jobs
         List<Job> testJobs = new ArrayList<>();
@@ -85,12 +90,13 @@ public class JobServiceTest {
         List<Job> jobs = jobService.getJobs();
 
         // check jobs returned from job service class equal test jobs list
-        Assertions.assertEquals(jobs,testJobs);
+        Assertions.assertEquals(jobs, testJobs);
     }
 
     /**
      * Verify that could not get jobs exception is thrown by job service class
      * when the exception is thrown by dao class.
+     *
      * @throws FailedToGetException if sql error caught by dao class
      */
     @Test
@@ -106,6 +112,7 @@ public class JobServiceTest {
     /**
      * Verify that an empty list of jobs is returned
      * when the job dao class returns no data from the database.
+     *
      * @throws FailedToGetException
      */
     @Test
@@ -119,7 +126,7 @@ public class JobServiceTest {
         // check array list is not null
         Assertions.assertNotNull(jobs);
         // check array list is empty
-        Assertions.assertEquals(jobs.size(),0);
+        Assertions.assertEquals(jobs.size(), 0);
     }
 
     /**
@@ -256,7 +263,7 @@ public class JobServiceTest {
     void whenGetJobSpecCalled_shouldReturnJobSpec() throws FailedToGetException, JobDoesNotExistException {
 
         // create a job spec request to be returned
-        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse("job name","test job specification","https://kainos-sharepoint/job/1");
+        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse(1, "job name", "test job specification", "https://kainos-sharepoint/job/1");
 
         // id of job we want to find spec of
         int jobId = 1;
@@ -334,5 +341,70 @@ public class JobServiceTest {
         // check failed to create job exception thrown when get create job method is called
         assertThrows(FailedToCreateJobException.class,
                 () -> jobService.createJob(job));
+    }
+    
+    /**
+     * Test for deleteJob method
+     * Verifies that the FailedToGetException is passed up from the JobDao
+     * @throws JobDoesNotExistException
+     * @throws FailedToGetException
+     */
+    @Test
+    void deleteJob_shouldThrowFailedToGetException_whenDaoThrowsFailedToGetException() throws JobDoesNotExistException, FailedToGetException {
+
+        // id of the job to delete
+        int jobId = 1;
+
+        // Confirm that the job exists (otherwise a different exception will be thrown)
+        JobSpecificationResponse response = new JobSpecificationResponse(1, "test", "test", "test");
+        Mockito.when(jobDao.getJobSpec(jobId)).thenReturn(response);
+
+        // Tell the DAO to throw the FailedToGetException
+        Mockito.doThrow(new FailedToGetException("Failed to get job.")).when(jobDao).deleteJob(jobId);
+
+        // Assert that the JobService also throws the FailedToGetException
+        assertThrows(FailedToGetException.class,
+                () -> jobService.deleteJob(jobId));
+    }
+
+    /**
+     * Test for deleteJob method
+     * Verifies that the method throws a JobDoesNotExistException when the job does not exist in the database
+     * @throws FailedToGetException
+     */
+    @Test
+    void deleteJob_shouldThrowJobDoesNotExistException_whenJobDoesNotExist() throws FailedToGetException {
+
+        // id of the job to delete
+        int jobId = 1;
+
+        // Tell the Dao to return null when checking if the job exists
+        Mockito.when(jobDao.getJobSpec(jobId)).thenReturn(null);
+
+        // Assert that the JobService throws JobDoesNotExistException
+        assertThrows(JobDoesNotExistException.class,
+                () -> jobService.deleteJob(jobId));
+    }
+
+    /**
+     * Test for deleteJob method
+     * Verifies that the method actually calls the JobDao.deleteJob method
+     * @throws JobDoesNotExistException
+     * @throws FailedToGetException
+     */
+    @Test
+    void deleteJobOnService_shouldCallDeleteJob_onDao() throws FailedToGetException, JobDoesNotExistException {
+
+        // id of the job to delete
+        int jobId = 1;
+
+        // Confirm that the job exists (otherwise a different exception will be thrown)
+        JobSpecificationResponse response = new JobSpecificationResponse(1, "test", "test", "test");
+        Mockito.when(jobDao.getJobSpec(jobId)).thenReturn(response);
+
+        jobService.deleteJob(jobId);
+
+        // Verify that the deleteJob method of the DAO was called
+        Mockito.verify(jobDao).deleteJob(1);
     }
 }

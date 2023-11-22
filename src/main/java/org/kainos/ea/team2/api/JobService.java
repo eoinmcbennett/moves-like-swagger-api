@@ -70,6 +70,7 @@ public class JobService {
     }
 
     /**
+<<<<<<< HEAD
      * Calls to the dao to inserts data to the job role table in the
      * db and returns id for new row.
      * @param job (job name, spec, sharepoint, band level ID and job family ID)
@@ -135,5 +136,19 @@ public class JobService {
 
         // call to job dao
         return jobDao.getJobFamilies();
+=======
+     * Calls the JobDao to delete a job with a specified JobID.
+     * @param jobID
+     */
+    public void deleteJob(final int jobID) throws
+            JobDoesNotExistException, FailedToGetException {
+
+        // Check if job exists before attempting to delete it
+        if (jobDao.getJobSpec(jobID) == null) {
+            throw new JobDoesNotExistException();
+        }
+
+        jobDao.deleteJob(jobID);
+>>>>>>> origin/main
     }
 }

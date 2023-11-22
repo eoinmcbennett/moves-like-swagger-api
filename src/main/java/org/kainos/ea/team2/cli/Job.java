@@ -10,9 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Job object contains attributes of jobId, jobName and jobCapabilityName.
  */
 public class Job {
-
-    // instance vars
-
     /**
      * id of job.
      */
@@ -29,19 +26,28 @@ public class Job {
     private String jobCapabilityName;
 
     /**
+     * The band level of the position.
+     */
+    private BandLevel bandLevel;
+
+
+    /**
      * Constructor with args - creates a job with a name and id.
-     * @param jobId
-     * @param jobName
-     * @param jobCapabilityName
+     * @param jobId the id of the job
+     * @param jobName the name of the job
+     * @param jobCapabilityName the capability the job belongs to.
+     * @param bandLevel the band level the job is in
      */
     @JsonCreator
     public Job(@JsonProperty("jobId") final int jobId,
                @JsonProperty("jobName") final String jobName,
                @JsonProperty("capability_name")
-                   final String jobCapabilityName) {
+                   final String jobCapabilityName,
+    @JsonProperty("bandLevel") final BandLevel bandLevel) {
         this.jobId = jobId;
         this.jobName = jobName;
         this.jobCapabilityName = jobCapabilityName;
+        this.bandLevel = bandLevel;
     }
 
 
@@ -65,15 +71,23 @@ public class Job {
 
     /**
      * set id of job.
-     * @param jobId
+     * @param jobId the id of the job
      */
     public void setJobId(final int jobId) {
         this.jobId = jobId;
     }
 
     /**
+     * Gets the band level of the position.
+     * @return the band level
+     */
+    public BandLevel getBandLevel() {
+        return this.bandLevel;
+    }
+
+    /**
      * set name of job.
-     * @param jobName
+     * @param jobName the name of the job
      */
     public void setJobName(final String jobName) {
         this.jobName = jobName;
@@ -89,10 +103,17 @@ public class Job {
 
     /**
      * set capability of job.
-     * @param jobCapabilityName
+     * @param jobCapabilityName the capability to set
      */
     public void setJobCapabilityName(final String jobCapabilityName) {
         this.jobCapabilityName = jobCapabilityName;
     }
 
+    /**
+     * Sets the band level for the position.
+     * @param bandLevel the band level object to set
+     */
+    public void setBandLevel(final BandLevel bandLevel) {
+        this.bandLevel = bandLevel;
+    }
 }

@@ -14,10 +14,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kainos.ea.team2.cli.JobFamily;
+import org.kainos.ea.team2.db.DatabaseConnector;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 
@@ -82,7 +87,7 @@ public class JobIntegrationTest {
     void getJobSpec_shouldReturnJobSpec() {
 
         // call url to get job spec where job id = 1
-        Response response = APP.client().target("http://localhost:8080/api/job-specification/1")
+        Response response = APP.client().target("http://localhost:8080/api/job-specification/2")
                 .request()
                 .get();
 
@@ -374,4 +379,50 @@ public class JobIntegrationTest {
         Assertions.assertEquals(400, response.getStatus());
     }
 
+    @Test
+    void deleteJob_shouldReturnStatusCode204WhenJobIsSuccessfullyDeleted() throws SQLException {
+
+        // Get DB connection
+        Connection c = DatabaseConnector.getConnection();
+
+        // Insert a new job into the DB so we can delete it for this test case
+        String sqlString =
+                "INSERT INTO JobRoles (job_name, job_specification, sharepoint_link, bandlevel_id, job_family_id)" +
+                " VALUES ('test', 'test', 'test', 1, 1)";
+
+        Statement statement = c.createStatement();
+        statement.execute(sqlString, Statement.RETURN_GENERATED_KEYS);
+
+        // Get the ID of the newly inserted job
+        int returnedID;
+        ResultSet result = statement.getGeneratedKeys();
+
+        if (result.next()) {
+            returnedID = result.getInt(1);
+        } else {
+            throw new SQLException("Failed to insert the test job");
+        }
+
+        // call API to delete the newly added job
+        Response response = APP.client().target("http://localhost:8080/api/job-roles/" + returnedID)
+                .request()
+                .delete();
+
+        // check status code 204 returned
+        Assertions.assertEquals(204,response.getStatus());
+    }
+
+    @Test
+    void deleteJob_ShouldReturnStatusCode404_whenJobDoesNotExist() {
+
+        int invalidID = -1;
+
+        // Attempt to delete the non-existent job
+        Response response = APP.client().target("http://localhost:8080/api/job-roles/" + invalidID)
+                .request()
+                .delete();
+
+        // check status code 404 returned
+        Assertions.assertEquals(404,response.getStatus());
+    }
 }
