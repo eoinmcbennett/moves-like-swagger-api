@@ -50,13 +50,14 @@ public class JobDao implements IJobDAO {
                         resultSet.getString("band_name")
                 );
 
-                Job job = new Job(
-                        resultSet.getInt("job_id"),
+                // create new job
+                Job job = new Job(resultSet.getInt("job_id"),
                         resultSet.getString("job_name"),
                         resultSet.getString("capability_name"),
-                        level
-                );
+                        new BandLevel(resultSet.getInt("bandlevel_id"),
+                                resultSet.getString("band_name")));
 
+                // add new job to list
                 jobList.add(job);
             }
 
