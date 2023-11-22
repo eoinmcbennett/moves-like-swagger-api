@@ -53,5 +53,7 @@ Make sure these are set to valid login credentials
 ```
 TEST_VALID_USERNAME
 TEST_VALID_PASSWORD
+VALID_ADMIN_NAME
+VALID_ADMIN_PASSWORD
 ```
 1. Run `mvn clean test` to run all tests (ensure the application is ***not*** running before attempting to run tests)

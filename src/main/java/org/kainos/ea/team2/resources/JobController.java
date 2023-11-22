@@ -61,7 +61,7 @@ public class JobController {
     @GET
     @Path("/job-specification/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Authorise(requireAdmin = true)
+    @Authorise // user and admin route
     public Response getJobSpec(
             @PathParam("id") final int id) {
         try {
@@ -88,6 +88,7 @@ public class JobController {
     @DELETE
     @Path("/job-roles/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Authorise(requireAdmin = true) // admin only route
     public Response deleteJob(@PathParam("id") final int jobID) {
         try {
             jobService.deleteJob(jobID);
