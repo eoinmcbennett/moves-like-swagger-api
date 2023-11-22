@@ -92,7 +92,7 @@ public class JobServiceTest {
         List<Job> jobs = jobService.getJobs();
 
         // check jobs returned from job service class equal test jobs list
-        Assertions.assertEquals(jobs, testJobs);
+        Assertions.assertEquals(testJobs, jobs);
     }
 
     /**
@@ -128,7 +128,7 @@ public class JobServiceTest {
         // check array list is not null
         Assertions.assertNotNull(jobs);
         // check array list is empty
-        Assertions.assertEquals(jobs.size(), 0);
+        Assertions.assertEquals(0, jobs.size());
     }
 
     /**
@@ -156,7 +156,7 @@ public class JobServiceTest {
         List<BandLevel> bandLevels = jobService.getBandLevels();
 
         // check band levels returned from job service class equal test band levels list
-        Assertions.assertEquals(bandLevels,testBandLevels);
+        Assertions.assertEquals(testBandLevels,bandLevels);
     }
 
     /**
@@ -190,7 +190,7 @@ public class JobServiceTest {
         // check array list is not null
         Assertions.assertNotNull(bandLevels);
         // check array list is empty
-        Assertions.assertEquals(bandLevels.size(),0);
+        Assertions.assertEquals(0, bandLevels.size());
     }
 
     /**
@@ -219,7 +219,7 @@ public class JobServiceTest {
         List<JobFamily> jobFamilies = jobService.getJobFamilies();
 
         // check job families returned from job service class equal test job families list
-        Assertions.assertEquals(jobFamilies,testJobFamilies);
+        Assertions.assertEquals(testJobFamilies,jobFamilies);
     }
 
     /**
@@ -253,7 +253,7 @@ public class JobServiceTest {
         // check array list is not null
         Assertions.assertNotNull(jobFamilies);
         // check array list is empty
-        Assertions.assertEquals(jobFamilies.size(),0);
+        Assertions.assertEquals(0,jobFamilies.size());
     }
 
     /**
@@ -326,7 +326,7 @@ public class JobServiceTest {
 
         int result = jobService.createJob(job);
 
-        assertEquals(result, expectedResult);
+        assertEquals(expectedResult, result);
     }
 
     /**
