@@ -1,0 +1,39 @@
+name: AWS JMeter Test
+
+on:
+
+  push:
+    branches:
+      - '*'
+  schedule:
+    - cron: '0 0 * * *'  # Run every day at midnight GMT
+    - cron: '0 12 * * *'  # Run every day at midday GMT
+
+  workflow_dispatch:
+
+jobs:
+
+  ScheduledTest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        scheduled-run:
+          - true
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run AWS JMeter Tests
+        if: matrix.scheduled-run
+        uses: QAInsights/PerfAction@v3.1
+        with:
+          test-plan-path: jmeter-files/aws-test-plan.jmx
+          args: ""
+
+      - name: Upload AWS Results
+        if: matrix.scheduled-run
+        uses: actions/upload-artifact@v2
+        with:
+          name: jmeter-aws-results
+          path: result.jtl

@@ -32,30 +32,31 @@ public class JobDao implements IJobDAO {
 
             // sql string
             String sqlString = "SELECT job_id, job_name, "
-                    + "bandlevel_id, band_name, capability_name "
-                    + "FROM JobRoles JOIN BandLevel USING(bandlevel_id) "
-                    + "INNER JOIN Capabilities USING(capability_id);";
+                    + "capability_name, band_name, BandLevel.bandlevel_id "
+                    + "FROM JobRoles "
+                    + "INNER JOIN JobFamilies ON JobRoles.job_family_id = "
+                    + "JobFamilies.job_family_id "
+                    + "INNER JOIN Capabilities ON JobFamilies.capability_id = "
+                    + "Capabilities.capability_id "
+                    + "INNER JOIN BandLevel ON JobRoles.bandlevel_id = "
+                    + "BandLevel.bandlevel_id;";
 
             // prepare sql statement
-            PreparedStatement preparedStatement = c.prepareStatement(sqlString);
+            PreparedStatement preparedStatement =
+                    c.prepareStatement(sqlString);
 
             // execute statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
             // add each returned row to jobList
             while (resultSet.next()) {
-                BandLevel level = new BandLevel(
-                    resultSet.getInt("bandlevel_id"),
-                    resultSet.getString("band_name")
-                );
-
-                Job job = new Job(
-                    resultSet.getInt("job_id"),
-                    resultSet.getString("job_name"),
-                    resultSet.getString("capability_name"),
-                    level
-                );
-
+                // create new job
+                Job job = new Job(resultSet.getInt("job_id"),
+                        resultSet.getString("job_name"),
+                        resultSet.getString("capability_name"),
+                        new BandLevel(resultSet.getInt("bandlevel_id"),
+                                resultSet.getString("band_name")));
+                // add new job to list
                 jobList.add(job);
             }
 
@@ -63,6 +64,7 @@ public class JobDao implements IJobDAO {
             return jobList;
 
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
             // throw could not get jobs exception if sql exception is caught
             throw new FailedToGetException("Failed to get jobs.");
         }
