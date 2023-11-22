@@ -11,7 +11,7 @@ Config
 ---
 1. The following environment variables need to be set to enable database connection:
 ```
-DB_USERNAME
+DB_USER
 DB_PASSWORD
 DB_HOST
 DB_NAME

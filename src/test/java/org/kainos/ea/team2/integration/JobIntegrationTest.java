@@ -3,6 +3,7 @@ package org.kainos.ea.team2.integration;
 import org.kainos.ea.team2.MovesLikeSwaggerApplication;
 import org.kainos.ea.team2.MovesLikeSwaggerConfiguration;
 import org.kainos.ea.team2.cli.Job;
+import org.kainos.ea.team2.cli.JobSpecificationResponse;
 
 import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
@@ -45,9 +46,12 @@ public class JobIntegrationTest {
 
     /**
      * Verify that the getJobSpec method returns a JobSpecificationResponse.
+     * This test assumes that the JobSpecificationResponse class corresponds to
+     * the structure of the JSON response from the API endpoint and checks that
+     * each necessary field is populated in the response.
      */
     @Test
-    void getJobSpec_shouldReturnJobSpec() {
+    void getJobSpec_shouldReturnJobSpecDetails() {
 
         // call url to get job spec where job id = 1
         Response response = APP.client().target("http://localhost:8080/api/job-specification/1")
@@ -55,11 +59,23 @@ public class JobIntegrationTest {
                 .get();
 
         // check status code 200 returned
-        Assertions.assertEquals(200,response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
 
         // check response entity is not null
         Assertions.assertNotNull(response.getEntity());
 
+        // Assuming the framework already interprets response as JSON
+        JobSpecificationResponse jobSpecResponse = response.readEntity(JobSpecificationResponse.class);
+
+        // Check if the necessary fields are present and not null
+        Assertions.assertNotNull(jobSpecResponse.getJobName());
+        Assertions.assertNotNull(jobSpecResponse.getJobSpecification());
+        Assertions.assertNotNull(jobSpecResponse.getSharepointLink());
+        Assertions.assertNotNull(jobSpecResponse.getResponsibilitiesList());
+
+        // Check the responsibilities list and ensure it's not empty
+        List<String> responsibilitiesList = jobSpecResponse.getResponsibilitiesList();
+        Assertions.assertFalse(responsibilitiesList.isEmpty());
     }
 
     /**

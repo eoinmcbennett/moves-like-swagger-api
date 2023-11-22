@@ -1,4 +1,7 @@
 package org.kainos.ea.team2.cli;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class JobSpecificationResponse {
@@ -36,16 +39,21 @@ public class JobSpecificationResponse {
      * @param sharepointLink
      * @param responsibilitiesList
      */
-    public JobSpecificationResponse(final String jobName,
-                                    final String jobSpecification,
-                                    final String sharepointLink,
-                                    final List<String> responsibilitiesList) {
+    @JsonCreator
+    public JobSpecificationResponse(
+            @JsonProperty("jobName")
+            final String jobName,
+            @JsonProperty("jobSpecification")
+            final String jobSpecification,
+            @JsonProperty("sharepointLink")
+            final String sharepointLink,
+            @JsonProperty("responsibilitiesList")
+            final List<String> responsibilitiesList) {
         this.jobName = jobName;
         this.jobSpecification = jobSpecification;
         this.sharepointLink = sharepointLink;
         this.responsibilitiesList = responsibilitiesList;
     }
-
 
     // getters and setters
 
