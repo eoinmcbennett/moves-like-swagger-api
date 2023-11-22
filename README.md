@@ -28,7 +28,7 @@ This command configures your Docker image with the database connection parameter
 
 Run the following command from the root directory: 
 ```
-docker build --build-arg DB_HOST=${DB_HOST} --build-arg DB_PASSWORD=${DB_PASSWORD} --build-arg DB_USERNAME=${DB_USERNAME} --build-arg DB_NAME=${DB_NAME} -t myapp:0.1 .
+docker build --build-arg DB_HOST=${DB_HOST} --build-arg DB_PASSWORD=${DB_PASSWORD} --build-arg DB_USER=${DB_USER} --build-arg DB_NAME=${DB_NAME} -t myapp:0.1 .
 ```
 
 How to start the moves-like-swagger-api application
@@ -48,3 +48,10 @@ In order to check your code with the linter locally. Run `mvn checkstyle:check -
 
 Tests
 ---
+The following environment variables need to be set to perform integration tests of the login system.
+Make sure these are set to valid login credentials
+```
+TEST_VALID_USERNAME
+TEST_VALID_PASSWORD
+```
+1. Run `mvn clean test` to run all tests (ensure the application is ***not*** running before attempting to run tests)
