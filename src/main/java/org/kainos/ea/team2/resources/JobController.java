@@ -1,8 +1,10 @@
 package org.kainos.ea.team2.resources;
 
 import io.swagger.annotations.Api;
+
 import org.kainos.ea.team2.api.JobService;
 import org.kainos.ea.team2.cli.CreateJob;
+
 import org.kainos.ea.team2.db.JobDao;
 import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
@@ -27,8 +29,10 @@ public class JobController {
      */
     private JobService jobService = new JobService(new JobDao());
 
+
     /**
      * endpoint to get list of jobs from database.
+     *
      * @return Response with appropriate status code and body.
      * Status code 200 if request successful and list non-empty.
      * Status code 500 if internal server error.
@@ -50,6 +54,7 @@ public class JobController {
 
     /**
      * endpoint to get list of jobs from database.
+     *
      * @param id job id of job with returned spec and sharepoint link
      * @return Response with appropriate status code and body.
      * Status code 200 if request successful and list non-empty.
@@ -75,6 +80,7 @@ public class JobController {
 
     /**
      * endpoint to add new job role to database.
+     *
      * @param job (job name, spec, sharepoint, band level ID and job family ID)
      * @return Response with appropriate status code and body.
      * Status code 200 if request successful.
@@ -85,16 +91,61 @@ public class JobController {
     @Path("/create-job")
     @Produces(MediaType.APPLICATION_JSON)
     public Response createJob(final CreateJob job) {
+
+            try {
+                return Response.ok(jobService.createJob(job)).build();
+            } catch (FailedToCreateJobException e) {
+                System.err.println(e.getMessage());
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                        entity(e.getMessage()).build();
+                //} catch (InvalidJobException e) {
+            } catch (InvalidJobException e) {
+                    System.err.println(e.getMessage());
+                    return Response.status(Response.Status.BAD_REQUEST).
+                            entity(e.getMessage()).build();
+            }
+    }
+
+    /**
+     * endpoint to get list of band levels from database.
+     *
+     * @return Response with appropriate status code and body.
+     * Status code 200 if request successful and list non-empty.
+     * Status code 500 if internal server error.
+     */
+    @GET
+    @Path("/job-band-levels")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBandLevels() {
         try {
-            // call to jobs service to return generated job ID
-            return Response.ok(jobService.createJob(job)).build();
-        } catch (FailedToCreateJobException e) {
-            System.err.println(e.getMessage());
+            // call to jobs service to return list of jobs
+            return Response.status(Response.Status.OK).
+                    entity(jobService.getBandLevels()).build();
+        } catch (FailedToGetException e) {
+            // status code 500 if internal server error
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
                     entity(e.getMessage()).build();
-        } catch (InvalidJobException e) {
-            System.err.println(e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).
+        }
+    }
+
+    /**
+     * endpoint to get list of job families from database.
+     *
+     * @return Response with appropriate status code and body.
+     * Status code 200 if request successful and list non-empty.
+     * Status code 500 if internal server error.
+     */
+    @GET
+    @Path("/job-families")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getJobFamilies() {
+        try {
+            // call to jobs service to return list of jobs
+            return Response.status(Response.Status.OK).
+                    entity(jobService.getJobFamilies()).build();
+        } catch (FailedToGetException e) {
+            // status code 500 if internal server error
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
                     entity(e.getMessage()).build();
         }
     }

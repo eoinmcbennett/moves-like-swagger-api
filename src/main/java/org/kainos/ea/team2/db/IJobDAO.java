@@ -1,11 +1,13 @@
 package org.kainos.ea.team2.db;
 
-import org.kainos.ea.team2.cli.CreateJob;
+
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
+import org.kainos.ea.team2.cli.CreateJob;
+import org.kainos.ea.team2.cli.BandLevel;
+import org.kainos.ea.team2.cli.JobFamily;
+import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public interface IJobDAO {
@@ -30,7 +32,21 @@ public interface IJobDAO {
      * id for new row.
      * @param job (job name, spec, sharepoint, band level ID and job family ID)
      * @return jobiD
-     * @throws SQLException
+     * @throws FailedToCreateJobException
      */
-    int createJob(CreateJob job) throws SQLException;
+    int createJob(CreateJob job) throws FailedToCreateJobException;
+
+    /**
+     * Interface of job dao class, returns list of band levels from db.
+     * @return List of type BandLevel
+     * @throws FailedToGetException if sql error thrown in dao
+     */
+    List<BandLevel> getBandLevels() throws FailedToGetException;
+
+    /**
+     * Interface of job dao class, returns list of jobFamilies from db.
+     * @return List of type JobFamily
+     * @throws FailedToGetException if sql error thrown in dao
+     */
+    List<JobFamily> getJobFamilies() throws FailedToGetException;
 }

@@ -2,6 +2,7 @@ package org.kainos.ea.team2.integration;
 
 import org.kainos.ea.team2.MovesLikeSwaggerApplication;
 import org.kainos.ea.team2.MovesLikeSwaggerConfiguration;
+import org.kainos.ea.team2.cli.BandLevel;
 import org.kainos.ea.team2.cli.CreateJob;
 import org.kainos.ea.team2.cli.Job;
 
@@ -12,6 +13,7 @@ import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kainos.ea.team2.cli.JobFamily;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -37,11 +39,38 @@ public class JobIntegrationTest {
     @Test
     void getJobs_shouldReturnListOfJobs() {
 
-        // list of employees, add each employee returned from the db
+        // list of jobs, add each job returned from the db
         List<Job> response = APP.client().target("http://localhost:8080/api/job-roles")
                 .request().get(List.class);
 
         // check that the list of jobs is non-empty
+        Assertions.assertTrue(response.size() > 0);
+
+    }
+
+    /**
+     * Verify that the getBandLevels method returns a list of band levels from the database.
+     */
+    @Test
+    void getBandLevels_shouldReturnListOfBandLevels() {
+
+        // list of band levels, add each band level returned from the db
+        List<BandLevel> response = APP.client().target("http://localhost:8080/api/job-band-levels")
+                .request().get(List.class);
+
+        // check that the list of band levels is non-empty
+        Assertions.assertTrue(response.size() > 0);
+
+    }
+
+    @Test
+    void getJobFamilies_shouldReturnListOfJobFamilies() {
+
+        // list of job families, add each job family returned from the db
+        List<JobFamily> response = APP.client().target("http://localhost:8080/api/job-families")
+                .request().get(List.class);
+
+        // check that the list of job families is non-empty
         Assertions.assertTrue(response.size() > 0);
 
     }
@@ -87,10 +116,11 @@ public class JobIntegrationTest {
     }
 
     /**
-     * Verify that the createJob method returns the ID of the job created.
+     * Verify that the createJob method returns the ID of the job created
+     * and correct response.
      */
     @Test
-    void createJob_shouldReturnIdOfJob() {
+    void createJob_shouldReturnIdOfJob_whenJobCreatedSuccessfully() {
 
         //Dummy job data to test
         CreateJob job = new CreateJob(
@@ -102,21 +132,28 @@ public class JobIntegrationTest {
 
         );
 
-        int id = APP.client().target("http://localhost:8080/api/create-job")
-                .request()
-                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE))
-                .readEntity(Integer.class);
-
-        Assertions.assertNotNull(id);
-        Assertions.assertNotEquals(-1, id);
-
+        //call url to create job
         Response response = APP.client().target("http://localhost:8080/api/create-job")
                 .request()
                 .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
 
-        Assertions.assertEquals(200, response.getStatus());
+        int id = response.readEntity(Integer.class);
+        int status = response.getStatus();
+
+        //check generated ID isn't null
+        Assertions.assertNotNull(id);
+        //check generated ID is valid
+        Assertions.assertNotEquals(-1, id);
+        //check correct response
+        Assertions.assertEquals(200, status);
+
     }
 
+    /**
+     * Verify that the createJob method returns status code
+     * 400 and correct error message in entity
+     * when job name is an empty string.
+     */
     @Test
     void createJob_shouldReturn400Error_whenJobNameIsAnEmptyString() {
 
@@ -137,6 +174,36 @@ public class JobIntegrationTest {
         Assertions.assertEquals(400, response.getStatus());
     }
 
+    /**
+     * Verify that the createJob method returns status code
+     * 400 and correct error message in entity
+     * when job name is null.
+     */
+    @Test
+    void createJob_shouldReturn400Error_whenJobNameNull() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                null,
+                "Drives bus",
+                "www.bus.com",
+                1,
+                6
+
+        );
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+    /**
+     * Verify that the createJob method returns status code
+     * 400 and correct error message in entity
+     * when job Specification is an empty string.
+     */
     @Test
     void createJob_shouldReturn400Error_whenJobSpecificationIsAnEmptyString() {
 
@@ -157,6 +224,36 @@ public class JobIntegrationTest {
         Assertions.assertEquals(400, response.getStatus());
     }
 
+    /**
+     * Verify that the createJob method returns status code
+     * 400 and correct error message in entity
+     * when job Specification is null.
+     */
+    @Test
+    void createJob_shouldReturn400Error_whenJobSpecificationIsNull() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                "Driver",
+                null,
+                "www.bus.com",
+                1,
+                6
+
+        );
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+    /**
+     * Verify that the createJob method returns status code
+     * 400 and correct error message in entity
+     * when sharepoint link is an empty string.
+     */
     @Test
     void createJob_shouldReturn400Error_whenSharepointLinkIsAnEmptyString() {
 
@@ -177,16 +274,96 @@ public class JobIntegrationTest {
         Assertions.assertEquals(400, response.getStatus());
     }
 
+    /**
+     * Verify that the createJob method returns status code
+     * 400 and correct error message in entity
+     * when sharepoint link is null.
+     */
+    @Test
+    void createJob_shouldReturn400Error_whenSharepointLinkIsNull() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                "Driver",
+                "Drives Bus",
+                null,
+                1,
+                6
+
+        );
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+    /**
+     * Verify that the createJob method returns status code
+     * 400 and correct error message in entity
+     * when job name is too long.
+     */
     @Test
     void createJob_shouldReturn400Error_whenJobNameHasTooManyChars() {
 
         //Dummy job data to test
         CreateJob job = new CreateJob(
-                "abpwtupudmdhxsilqzppyvqdnmnmlkzdclvvoafueluqimgttkjhbqzvntlishfysivlxefzjgbnmoxvlq",
+                "abpwtupudmdhxsilqzppyvqdnmnmlkzdclvvoafueluqimgttkjhbqzvntlishfysivlxefzjgbnmoxvlqb",
                 "Drives Bus",
                 "www.bus.com",
                 1,
                 6
+
+        );
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+    /**
+     * Verify that the createJob method returns status code
+     * 400 and correct error message in entity
+     * when band level ID is invalid.
+     */
+    @Test
+    void createJob_shouldReturn400Error_whenJobBandLevelIdInvalid() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                "Driver",
+                "Drives Bus",
+                "www.bus.com",
+                0,
+                6
+
+        );
+
+        Response response = APP.client().target("http://localhost:8080/api/create-job")
+                .request()
+                .post(Entity.entity(job, MediaType.APPLICATION_JSON_TYPE));
+
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+    /**
+     * Verify that the createJob method returns status code
+     * 400 and correct error message in entity
+     * when job family ID is invalid.
+     */
+    @Test
+    void createJob_shouldReturn500Error_whenJobFamilyIdInvalid() {
+
+        //Dummy job data to test
+        CreateJob job = new CreateJob(
+                "Driver",
+                "Drives Bus",
+                "www.bus.com",
+                1,
+                0
 
         );
 

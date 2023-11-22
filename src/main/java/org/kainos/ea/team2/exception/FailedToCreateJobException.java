@@ -7,11 +7,10 @@ package org.kainos.ea.team2.exception;
 public class FailedToCreateJobException extends Throwable {
 
     /**
-     * Returns appropriate error message.
-     * @return String failed to create job message
+     * returns error message passed into constructor when exception thrown.
+     * @param message
      */
-    @Override
-    public String getMessage() {
-        return "Failed to create job";
+    public FailedToCreateJobException(final String message) {
+        super(message);
     }
 }

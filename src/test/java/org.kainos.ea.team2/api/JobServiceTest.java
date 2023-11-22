@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.kainos.ea.team2.cli.CreateJob;
-import org.kainos.ea.team2.cli.Job;
-import org.kainos.ea.team2.cli.JobSpecificationResponse;
+import org.kainos.ea.team2.cli.*;
 import org.kainos.ea.team2.db.IJobDAO;
 import org.kainos.ea.team2.db.JobDao;
 import org.kainos.ea.team2.exception.FailedToCreateJobException;
@@ -125,6 +123,131 @@ public class JobServiceTest {
     }
 
     /**
+     * Verify that the correct list of band levels is returned
+     * when getBandLevels method is called in service class.
+     * @throws FailedToGetException if sql error caught
+     */
+    @Test
+    void whenGetBandLevelsCalled_jobServicesReturnsListOfBandLevels() throws FailedToGetException, SQLException {
+
+        // create band levels
+        BandLevel bandLevel1 = new BandLevel(1, "Trainee");
+        BandLevel bandLevel2 = new BandLevel(2, "Associate");
+
+        // create array list of band levels
+        List<BandLevel> testBandLevels = new ArrayList<>();
+        // add band levels to array list
+        testBandLevels.add(bandLevel1);
+        testBandLevels.add(bandLevel2);
+
+        // specify return of band levels when dao is called
+        Mockito.when(jobDao.getBandLevels()).thenReturn(testBandLevels);
+
+        // job service class calls to job dao class to get band levels
+        List<BandLevel> bandLevels = jobService.getBandLevels();
+
+        // check band levels returned from job service class equal test band levels list
+        Assertions.assertEquals(bandLevels,testBandLevels);
+    }
+
+    /**
+     * Verify that could not get band levels exception is thrown by job service class
+     * when the exception is thrown by dao class.
+     * @throws FailedToGetException if sql error caught by dao class
+     */
+    @Test
+    void whenGetBandLevelsCalled_shouldThrowFailedToGetException_whenDaoThrowsFailedToGetException() throws FailedToGetException {
+
+        // specify could not get jobs exception is thrown when get jobs method is called in dao class
+        Mockito.when(jobDao.getBandLevels()).thenThrow(FailedToGetException.class);
+
+        // check could not get jobs exception is thrown when get jobs method is called in job service class
+        Assertions.assertThrows(FailedToGetException.class, jobService::getBandLevels);
+    }
+
+    /**
+     * Verify that an empty list of band levels is returned
+     * when the job dao class returns no data from the database.
+     * @throws FailedToGetException
+     */
+    @Test
+    void whenGetBandLevelsCalled_shouldReturnEmptyList_whenDAOProvidesNoData() throws FailedToGetException {
+
+        // specify that an array list of jobs is returned when get jobs method called in job dao class
+        Mockito.when(jobDao.getBandLevels()).thenReturn(new ArrayList<BandLevel>());
+        // job service calls get jobs method
+        List<BandLevel> bandLevels = jobService.getBandLevels();
+
+        // check array list is not null
+        Assertions.assertNotNull(bandLevels);
+        // check array list is empty
+        Assertions.assertEquals(bandLevels.size(),0);
+    }
+
+    /**
+     * Verify that the correct list of job families is returned
+     * when getJobFamilies method is called in service class.
+     * @throws FailedToGetException if sql error caught
+     */
+    @Test
+    void whenGetJobFamiliesCalled_jobServicesReturnsListOfJobFamilies() throws FailedToGetException, SQLException {
+
+        // create job families
+        JobFamily jobFamily1 = new JobFamily(1, "Catering");
+        JobFamily jobFamily2 = new JobFamily(2, "Administration");
+
+        // create array list of job families
+        List<JobFamily> testJobFamilies = new ArrayList<>();
+
+        // add job families to array list
+        testJobFamilies.add(jobFamily1);
+        testJobFamilies.add(jobFamily2);
+
+        // specify return of job families when dao is called
+        Mockito.when(jobDao.getJobFamilies()).thenReturn(testJobFamilies);
+
+        // job service class calls to job dao class to get job families
+        List<JobFamily> jobFamilies = jobService.getJobFamilies();
+
+        // check job families returned from job service class equal test job families list
+        Assertions.assertEquals(jobFamilies,testJobFamilies);
+    }
+
+    /**
+     * Verify that could not get job families exception is thrown by job service class
+     * when the exception is thrown by dao class.
+     * @throws FailedToGetException if sql error caught by dao class
+     */
+    @Test
+    void whenGetJobFamiliesCalled_shouldThrowFailedToException_whenDaoThrowsFailedToGetException() throws FailedToGetException {
+
+        // specify could not get jobs exception is thrown when get jobs method is called in dao class
+        Mockito.when(jobDao.getJobFamilies()).thenThrow(FailedToGetException.class);
+
+        // check could not get jobs exception is thrown when get jobs method is called in job service class
+        Assertions.assertThrows(FailedToGetException.class, jobService::getJobFamilies);
+    }
+
+    /**
+     * Verify that an empty list of job families is returned
+     * when the job dao class returns no data from the database.
+     * @throws FailedToGetException
+     */
+    @Test
+    void whenGetJobFamiliesCalled_shouldReturnEmptyList_whenDAOProvidesNoData() throws FailedToGetException {
+
+        // specify that an array list of jobs is returned when get jobs method called in job dao class
+        Mockito.when(jobDao.getJobFamilies()).thenReturn(new ArrayList<JobFamily>());
+        // job service calls get jobs method
+        List<JobFamily> jobFamilies = jobService.getJobFamilies();
+
+        // check array list is not null
+        Assertions.assertNotNull(jobFamilies);
+        // check array list is empty
+        Assertions.assertEquals(jobFamilies.size(),0);
+    }
+
+    /**
      * Testing getJobSpec method.
      * Verifies that job service returns the job spec and sharepoint link
      * when the dao returns these from db.
@@ -188,12 +311,28 @@ public class JobServiceTest {
     }
 
     @Test
-    void createJob_shouldReturnId_whenDaoReturnsId() throws SQLException, InvalidJobException, FailedToCreateJobException {
+    void createJob_shouldReturnId_whenDaoReturnsId() throws InvalidJobException, FailedToCreateJobException {
         int expectedResult =1;
         Mockito.when(jobDao.createJob(job)).thenReturn(expectedResult);
 
         int result = jobService.createJob(job);
 
         assertEquals(result, expectedResult);
+    }
+
+    /**
+     * Verify that Failed to create job exception is thrown by job service class
+     * when the exception is thrown by dao class.
+     * @throws FailedToCreateJobException if sql error caught by dao class
+     */
+    @Test
+    void createJob_shouldThrowFailedToCreateJobException_whenDaoReturnsId() throws InvalidJobException, FailedToCreateJobException {
+
+        // specify failed to create job exception is thrown when create job method is called in dao class
+        Mockito.when(jobDao.createJob(job)).thenThrow(FailedToCreateJobException.class);
+
+        // check failed to create job exception thrown when get create job method is called
+        assertThrows(FailedToCreateJobException.class,
+                () -> jobService.createJob(job));
     }
 }

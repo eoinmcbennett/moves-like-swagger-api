@@ -1,8 +1,11 @@
 package org.kainos.ea.team2.db;
 
-import org.kainos.ea.team2.cli.CreateJob;
 import org.kainos.ea.team2.cli.Job;
 import org.kainos.ea.team2.cli.JobSpecificationResponse;
+import org.kainos.ea.team2.cli.CreateJob;
+import org.kainos.ea.team2.cli.BandLevel;
+import org.kainos.ea.team2.cli.JobFamily;
+import org.kainos.ea.team2.exception.FailedToCreateJobException;
 import org.kainos.ea.team2.exception.FailedToGetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -143,10 +146,12 @@ public class JobDao implements IJobDAO {
      * db and returns id for new row.
      * @param job (job name, spec, sharepoint, band level ID and job family ID)
      * @return jobId
-     * @throws SQLException
+     * @throws FailedToCreateJobException
      */
-    public int createJob(final CreateJob job) throws SQLException {
+    public int createJob(final CreateJob job) throws
+            FailedToCreateJobException {
 
+        try {
             // establish connection with db
             Connection c = DatabaseConnector.getConnection();
 
@@ -158,7 +163,6 @@ public class JobDao implements IJobDAO {
             // prepare statement
             PreparedStatement st = c.prepareStatement(insertStatement,
                     Statement.RETURN_GENERATED_KEYS);
-
 
 
             //assign values to prepared statement
@@ -181,6 +185,98 @@ public class JobDao implements IJobDAO {
 
             //otherwise return -1
             return -1;
+        } catch (SQLException e) {
+            throw new FailedToCreateJobException("Failed to get jobs.");
+        }
+    }
 
+    /**
+     * Calls to the dao to return a list of band levels
+     * from the band level table in the database.
+     * @return list of band levels
+     * @throws FailedToGetException if a sql error is thrown.
+     */
+    public List<BandLevel> getBandLevels() throws FailedToGetException {
+
+        // create list to add jobs returned from db
+        List<BandLevel> bandList = new ArrayList<>();
+
+        try {
+            // establish connection with database
+            Connection c = DatabaseConnector.getConnection();
+
+            // sql string
+            String sqlString = "SELECT bandlevel_id, band_name "
+                    + "FROM BandLevel;";
+
+            // prepare sql statement
+            PreparedStatement preparedStatement =
+                    c.prepareStatement(sqlString);
+
+            // execute statement
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // add each returned row to jobList
+            while (resultSet.next()) {
+                // create new job
+                BandLevel bandLevel =
+                        new BandLevel(resultSet.getInt("bandlevel_id"),
+                        resultSet.getString("band_name"));
+                // add new job to list
+                bandList.add(bandLevel);
+            }
+
+            // return job list
+            return bandList;
+
+        } catch (SQLException e) {
+            // throw could not get jobs exception if sql exception is caught
+            throw new FailedToGetException("Failed to get band levels.");
+        }
+    }
+
+    /**
+     * Calls to the dao to return a list of job families
+     * from the job families table in the database.
+     * @return list of job families
+     * @throws FailedToGetException if a sql error is thrown.
+     */
+    public List<JobFamily> getJobFamilies() throws FailedToGetException {
+
+        // create list to add jobs returned from db
+        List<JobFamily> jobFamilies = new ArrayList<>();
+
+        try {
+            // establish connection with database
+            Connection c = DatabaseConnector.getConnection();
+
+            // sql string
+            String sqlString = "SELECT job_family_id, job_family_name "
+                    + "FROM JobFamilies;";
+
+            // prepare sql statement
+            PreparedStatement preparedStatement =
+                    c.prepareStatement(sqlString);
+
+            // execute statement
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // add each returned row to jobList
+            while (resultSet.next()) {
+                // create new job
+                JobFamily jobFamily =
+                        new JobFamily(resultSet.getInt("job_family_id"),
+                        resultSet.getString("job_family_name"));
+                // add new job to list
+                jobFamilies.add(jobFamily);
+            }
+
+            // return job list
+            return jobFamilies;
+
+        } catch (SQLException e) {
+            // throw could not get jobs exception if sql exception is caught
+            throw new FailedToGetException("Failed to get job families.");
+        }
     }
 }
