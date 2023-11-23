@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -117,13 +118,14 @@ public class JobServiceTest {
     /**
      * Testing getJobSpec method.
      * Verifies that job service returns the job spec and sharepoint link
+     * and job responsibilities
      * when the dao returns these from db.
      */
     @Test
     void whenGetJobSpecCalled_shouldReturnJobSpec() throws FailedToGetException, JobDoesNotExistException {
 
         // create a job spec request to be returned
-        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse(1, "job name", "test job specification", "https://kainos-sharepoint/job/1");
+        JobSpecificationResponse expectedJobSpecificationResponse = new JobSpecificationResponse(1,"job name", "test job specification","https://kainos-sharepoint/job/1", Collections.singletonList("Responsibility1, Responsibility2"));
 
         // id of job we want to find spec of
         int jobId = 1;
@@ -190,7 +192,7 @@ public class JobServiceTest {
         int jobId = 1;
 
         // Confirm that the job exists (otherwise a different exception will be thrown)
-        JobSpecificationResponse response = new JobSpecificationResponse(1, "test", "test", "test");
+        JobSpecificationResponse response = new JobSpecificationResponse(1, "test", "test", "test", Collections.singletonList("Responsibility1, Responsibility2"));
         Mockito.when(jobDao.getJobSpec(jobId)).thenReturn(response);
 
         // Tell the DAO to throw the FailedToGetException
@@ -233,7 +235,7 @@ public class JobServiceTest {
         int jobId = 1;
 
         // Confirm that the job exists (otherwise a different exception will be thrown)
-        JobSpecificationResponse response = new JobSpecificationResponse(1, "test", "test", "test");
+        JobSpecificationResponse response = new JobSpecificationResponse(1, "test", "test", "test", Collections.singletonList("Responsibility1, Responsibility2"));
         Mockito.when(jobDao.getJobSpec(jobId)).thenReturn(response);
 
         jobService.deleteJob(jobId);

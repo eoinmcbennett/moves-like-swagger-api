@@ -4,6 +4,7 @@ import org.kainos.ea.team2.MovesLikeSwaggerApplication;
 import org.kainos.ea.team2.MovesLikeSwaggerConfiguration;
 import org.kainos.ea.team2.cli.BasicCredentials;
 import org.kainos.ea.team2.cli.Job;
+import org.kainos.ea.team2.cli.JobSpecificationResponse;
 
 import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
@@ -17,6 +18,7 @@ import org.kainos.ea.team2.db.DatabaseConnector;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -128,6 +130,9 @@ public class JobIntegrationTest {
 
     /**
      * Verify that the getJobSpec method returns a JobSpecificationResponse for a user.
+     * This test assumes that the JobSpecificationResponse class corresponds to
+     * the structure of the JSON response from the API endpoint and checks that
+     * each necessary field is populated in the response.
      */
     @Test
     void getJobSpec_shouldReturnJobSpecForUser() {
@@ -144,6 +149,19 @@ public class JobIntegrationTest {
         // check response entity is not null
         Assertions.assertNotNull(response.getEntity());
 
+        // Assuming the framework already interprets response as JSON
+        JobSpecificationResponse jobSpecResponse = response.readEntity(JobSpecificationResponse.class);
+
+        // Check if the necessary fields are present and not null
+        Assertions.assertNotNull(jobSpecResponse.getJobName());
+        Assertions.assertNotNull(jobSpecResponse.getJobSpecification());
+        Assertions.assertNotNull(jobSpecResponse.getSharepointLink());
+        Assertions.assertNotNull(jobSpecResponse.getResponsibilitiesList());
+
+        // Check the responsibilities list and ensure it's not empty
+        List<String> responsibilitiesList = jobSpecResponse.getResponsibilitiesList();
+        Assertions.assertFalse(responsibilitiesList.isEmpty());
+
     }
 
     /**
@@ -159,11 +177,23 @@ public class JobIntegrationTest {
                 .get();
 
         // check status code 200 returned
-        Assertions.assertEquals(200,response.getStatus());
+        Assertions.assertEquals(200, response.getStatus());
 
         // check response entity is not null
         Assertions.assertNotNull(response.getEntity());
 
+        // Assuming the framework already interprets response as JSON
+        JobSpecificationResponse jobSpecResponse = response.readEntity(JobSpecificationResponse.class);
+
+        // Check if the necessary fields are present and not null
+        Assertions.assertNotNull(jobSpecResponse.getJobName());
+        Assertions.assertNotNull(jobSpecResponse.getJobSpecification());
+        Assertions.assertNotNull(jobSpecResponse.getSharepointLink());
+        Assertions.assertNotNull(jobSpecResponse.getResponsibilitiesList());
+
+        // Check the responsibilities list and ensure it's not empty
+        List<String> responsibilitiesList = jobSpecResponse.getResponsibilitiesList();
+        Assertions.assertFalse(responsibilitiesList.isEmpty());
     }
 
     /**
@@ -207,17 +237,16 @@ public class JobIntegrationTest {
      */
     @Test
     void deleteJob_shouldReturnStatusCode204WhenJobIsSuccessfullyDeleted() throws SQLException {
-
         // Get DB connection
         Connection c = DatabaseConnector.getConnection();
 
         // Insert a new job into the DB so we can delete it for this test case
-        String sqlString =
+        String sqlStringJob =
                 "INSERT INTO JobRoles (job_name, job_specification, sharepoint_link, bandlevel_id, job_family_id)" +
-                " VALUES ('test', 'test', 'test', 1, 1)";
+                        " VALUES ('testJob', 'testSpec', 'testLink', 1, 1)";
 
         Statement statement = c.createStatement();
-        statement.execute(sqlString, Statement.RETURN_GENERATED_KEYS);
+        statement.execute(sqlStringJob, Statement.RETURN_GENERATED_KEYS);
 
         // Get the ID of the newly inserted job
         int returnedID;
@@ -229,14 +258,24 @@ public class JobIntegrationTest {
             throw new SQLException("Failed to insert the test job");
         }
 
+        // Insert responsibilities associated with the job into JobResponsibilities table
+        String sqlStringResponsibilities =
+                "INSERT INTO JobResponsibilities (job_id, responsibility_id) VALUES (?, ?)";
+
+        PreparedStatement preparedStatementResponsibilities = c.prepareStatement(sqlStringResponsibilities);
+        preparedStatementResponsibilities.setInt(1, returnedID);
+        preparedStatementResponsibilities.setInt(2, 1);
+        preparedStatementResponsibilities.executeUpdate();
+
         // call API to delete the newly added job
         Response response = APP.client().target("http://localhost:8080/api/job-roles/" + returnedID)
                 .request().header("Authorization", "Bearer " + getAdminJWT())
                 .delete();
 
         // check status code 204 returned
-        Assertions.assertEquals(204,response.getStatus());
+        Assertions.assertEquals(204, response.getStatus());
     }
+
 
     @Test
     void deleteJob_ShouldReturnStatusCode404_whenJobDoesNotExist() {

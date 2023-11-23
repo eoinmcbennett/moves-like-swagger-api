@@ -42,8 +42,8 @@ public class Job {
     public Job(@JsonProperty("jobId") final int jobId,
                @JsonProperty("jobName") final String jobName,
                @JsonProperty("capability_name")
-                   final String jobCapabilityName,
-    @JsonProperty("bandLevel") final BandLevel bandLevel) {
+               final String jobCapabilityName,
+               @JsonProperty("bandLevel") final BandLevel bandLevel) {
         this.jobId = jobId;
         this.jobName = jobName;
         this.jobCapabilityName = jobCapabilityName;
