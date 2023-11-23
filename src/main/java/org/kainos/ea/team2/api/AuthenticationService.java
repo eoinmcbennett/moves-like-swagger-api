@@ -1,5 +1,6 @@
 package org.kainos.ea.team2.api;
 
+import io.fusionauth.jwt.JWTUtils;
 import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.Verifier;
 import io.fusionauth.jwt.domain.JWT;
@@ -7,6 +8,7 @@ import io.fusionauth.jwt.hmac.HMACSigner;
 import io.fusionauth.jwt.hmac.HMACVerifier;
 import org.kainos.ea.team2.cli.BasicCredentials;
 import org.kainos.ea.team2.cli.HashedPassword;
+import org.kainos.ea.team2.cli.UserRole;
 import org.kainos.ea.team2.client.AuthenticationException;
 import org.kainos.ea.team2.client.IValidator;
 import org.kainos.ea.team2.client.ValidationException;
@@ -81,6 +83,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     /**
      * Re-generates a password hash given the passed parameters.
+     * Method called in authenticate method in Auth Service class.
      * @param password the password to hash.
      * @param salt the salt used in the hash.
      * @param iterations the number of iterations used in the hash.
@@ -117,19 +120,28 @@ public class AuthenticationService implements IAuthenticationService {
             final BasicCredentials credentials)
             throws AuthenticationException, ValidationException {
 
+        // pass entered credentials into validator class.
+        // returns null if data entered in both fields,
+        // returns a string if one/both fields are null or empty
         String error = validator.validate(credentials);
         if (error != null) {
+            // if string returned from validator, throw exception
+            System.err.println("credentials invalid");
             throw new ValidationException(error);
+
         }
 
+        // get the hashed password for
+        // user with entered name (see DBAuthenticationSource)
         HashedPassword hashedPassword =
                 authSource.getHashedPasswordForUser(credentials.getUsername());
 
+        // returns null if nothing returned from db i.e. username wrong
         if (hashedPassword == null) {
             return null;
         }
 
-        //re hash the provided password and add the existing salt
+        // re hash the provided password and add the existing salt
         String password = credentials.getPassword();
         byte[] salt = hashedPassword.getSalt();
         int iterations = hashedPassword.getIterations();
@@ -137,14 +149,25 @@ public class AuthenticationService implements IAuthenticationService {
 
         byte[] passwordHash = hashedPassword.getHashedPassword();
 
+        // if provided password does not equal password in db, return null
         if (!Arrays.equals(credentialHash, passwordHash)) {
             return null;
         }
 
+        // get role of given user from db (see DBAuthenticationSource)
+        UserRole role = authSource.getRoleForUser(credentials.getUsername());
+        if (role == null) {
+            throw new AuthenticationException("Could not get role for user");
+        }
+
+        // if no null returned yet, username and password
+        // are good and user has a role -> create jwt token
         return new JWT()
             .setIssuer("org.kainos.ea")
             .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
+                // subject is current credentials
             .setSubject(credentials.getUsername())
+            .addClaim("role", role.toString()) // role of user
             .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusDays(1));
     }
 
@@ -152,20 +175,47 @@ public class AuthenticationService implements IAuthenticationService {
      * Checks if the encoded JWT passed was issued by this server.
      * @param jwt the JWT to validate.
      * @return true if valid, false if not.
+     * @throws AuthenticationException thrown if validation was not possible
      */
     @Override
-    public boolean validate(final String jwt) {
-        JWT userJWT = JWT.getDecoder().decode(jwt, jwtVerifier);
-        return userJWT != null;
+    public boolean validate(final String jwt) throws AuthenticationException {
+        try {
+            JWT userJWT = JWT.getDecoder().decode(jwt, jwtVerifier);
+            return userJWT != null;
+        } catch (Exception e) {
+            throw new AuthenticationException(e.getMessage());
+        }
     }
 
     /**
      * Attempts to sign and encode a JWT.
      * @param jwt the JWT to sign
      * @return the signed, encoded JWT
+     * @throws AuthenticationException thrown if signing was not possible
      */
     @Override
-    public String sign(final JWT jwt) {
-        return JWT.getEncoder().encode(jwt, jwtSigner);
+    public String sign(final JWT jwt) throws AuthenticationException {
+        try {
+            // call to JWT class (java) to encode and sign jwt
+            return JWT.getEncoder().encode(jwt, jwtSigner);
+        } catch (Exception e) {
+            throw new AuthenticationException(e.getMessage());
+        }
+    }
+
+    /**
+     * Returns the role assigned to the passed JWT token.
+     * @param token the encoded token to check
+     * @return the role the token has
+     */
+    public static UserRole getTokenRole(final String token) {
+        JWT userJWT = JWTUtils.decodePayload(token);
+        String role = String.valueOf(userJWT.getAllClaims().get("role"));
+
+        if (role == null) {
+            return null;
+        }
+
+        return UserRole.valueOf(role);
     }
 }

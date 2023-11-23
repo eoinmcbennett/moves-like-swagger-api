@@ -25,4 +25,6 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           TEST_VALID_USERNAME: ${{ secrets.TEST_VALID_USERNAME }}
           TEST_VALID_PASSWORD: ${{ secrets.TEST_VALID_PASSWORD }}
+          VALID_ADMIN_NAME: ${{ secrets.VALID_ADMIN_NAME }}
+          VALID_ADMIN_PASSWORD: ${{ secrets.VALID_ADMIN_PASSWORD }}
         run: mvn test -no-transfer-progress
