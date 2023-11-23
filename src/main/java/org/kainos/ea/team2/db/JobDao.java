@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Collections;
 
 public class JobDao implements IJobDAO {
 
@@ -112,11 +113,18 @@ public class JobDao implements IJobDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             // Create and return job spec response object with rows returned
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 String responsString =
                         resultSet.getString("responsibilities_list");
-                List<String> responsibilitiesList =
-                        Arrays.asList(responsString.split(", "));
+                List<String> responsibilitiesList;
+
+                if (responsString != null && !responsString.isEmpty()) {
+                    responsibilitiesList =
+                            Arrays.asList(responsString.split(", "));
+                } else {
+                    // If list is null or empty, assign an empty list
+                    responsibilitiesList = Collections.emptyList();
+                }
                 return new JobSpecificationResponse(
                         resultSet.getInt("job_id"),
                         resultSet.getString("job_name"),
