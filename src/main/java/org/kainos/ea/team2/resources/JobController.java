@@ -1,6 +1,8 @@
 package org.kainos.ea.team2.resources;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.Authorization;
+import org.kainos.ea.team2.cli.Authorise;
 import org.kainos.ea.team2.api.JobService;
 import org.kainos.ea.team2.db.JobDao;
 import org.kainos.ea.team2.exception.FailedToGetException;
@@ -15,7 +17,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api")
-@Api("Moves Like Swagger API")
+@Api(
+    value = "Moves Like Swagger API",
+    authorizations = {@Authorization(value = "basicAuth")}
+)
 public class JobController {
     /**
      * Job service instance for the controller to use.
@@ -32,6 +37,7 @@ public class JobController {
     @GET
     @Path("/job-roles")
     @Produces(MediaType.APPLICATION_JSON)
+    @Authorise// user and admin route
     public Response getJobs() {
         try {
             // call to jobs service to return list of jobs
@@ -56,7 +62,9 @@ public class JobController {
     @GET
     @Path("/job-specification/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getJobSpec(@PathParam("id") final int id) {
+    @Authorise // user and admin route
+    public Response getJobSpec(
+            @PathParam("id") final int id) {
         try {
             // call to jobs service to return job spec response object
             return Response.status(Response.Status.OK).
@@ -81,6 +89,7 @@ public class JobController {
     @DELETE
     @Path("/job-roles/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Authorise(requireAdmin = true) // admin only route
     public Response deleteJob(@PathParam("id") final int jobID) {
         try {
             jobService.deleteJob(jobID);

@@ -41,8 +41,8 @@ public class JobDao implements IJobDAO {
                     + "JobFamilies.job_family_id INNER JOIN Capabilities "
                     + "ON JobFamilies.capability_id = "
                     + "Capabilities.capability_id "
-                    + "INNER JOIN BandLevel ON JobRoles.bandlevel_id = "
-                    + "BandLevel.bandlevel_id;";
+                    + "INNER JOIN BandLevel "
+                    + "ON JobRoles.bandlevel_id = BandLevel.bandlevel_id;";
 
             // prepare sql statement
             PreparedStatement preparedStatement =

@@ -23,12 +23,12 @@ public interface IAuthenticationService {
      * @param jwt the JWT to validate
      * @return true or false depending if the token was valid
      */
-    boolean validate(String jwt);
+    boolean validate(String jwt) throws AuthenticationException;
 
     /**
      * Attempts to sign a JWT with the secret key.
      * @param jwt the JWT to sign
      * @return String representing the signed JWT
      */
-    String sign(JWT jwt);
+    String sign(JWT jwt) throws AuthenticationException;
 }
