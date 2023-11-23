@@ -69,7 +69,7 @@ public class AuthorisationFilter implements ContainerRequestFilter {
                 containerRequestContext.getHeaderString("Authorization");
         if (authorisationHeader == null) {
           containerRequestContext.abortWith(
-                  Response.status(Response.Status.BAD_REQUEST)
+                  Response.status(Response.Status.UNAUTHORIZED)
                   .build());
           return;
         }
@@ -77,7 +77,7 @@ public class AuthorisationFilter implements ContainerRequestFilter {
         String encodedJWT = authorisationHeader.split(" ")[1];
         if (encodedJWT == null) {
             containerRequestContext.abortWith(
-                    Response.status(Response.Status.BAD_REQUEST)
+                    Response.status(Response.Status.UNAUTHORIZED)
                     .build());
             return;
         }
@@ -113,7 +113,7 @@ public class AuthorisationFilter implements ContainerRequestFilter {
        } catch (AuthenticationException e) {
            containerRequestContext.abortWith(
                    Response.status(
-                   Response.Status.BAD_REQUEST).build());
+                   Response.Status.UNAUTHORIZED).build());
        } catch (Exception e) {
            containerRequestContext.abortWith(
                Response.status(

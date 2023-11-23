@@ -113,17 +113,17 @@ public class JobIntegrationTest {
     }
 
     /**
-     * Checks that status 400 bad request returned when user visits url when not logged in.
+     * Checks that status 401 unauthorized returned when user visits url when not logged in.
      */
     @Test
-     void getJobs_shouldReturn400BadRequestWhenNotLoggedIn(){
+     void getJobs_shouldReturn401unauthorizedWhenNotLoggedIn(){
          // call url to get jobs, no passed in jwt
          Response response = APP.client().target("http://localhost:8080/api/job-roles")
                  .request()
                  .get();
 
-         // check status code 400 bad request returned
-         Assertions.assertEquals(400,response.getStatus());
+         // check status code 401 unauthorized returned
+         Assertions.assertEquals(401,response.getStatus());
      }
 
     /**
@@ -189,17 +189,17 @@ public class JobIntegrationTest {
     }
 
     /**
-     * Checks that status 400 bad request returned when user visits url when not logged in.
+     * Checks that status 401 unauthorized returned when user visits url when not logged in.
      */
     @Test
-    void getJobSpec_shouldReturn400BadRequestWhenNotLoggedIn(){
+    void getJobSpec_shouldReturn401unauthorizedWhenNotLoggedIn(){
         // call url to get jobs, no passed in jwt
         Response response = APP.client().target("http://localhost:8080/api/job-specification/1")
                 .request()
                 .get();
 
-        // check status code 400 bad request returned
-        Assertions.assertEquals(400,response.getStatus());
+        // check status code 401 unauthorized returned
+        Assertions.assertEquals(401,response.getStatus());
     }
 
     /**
@@ -253,17 +253,17 @@ public class JobIntegrationTest {
     }
 
     /**
-     * Checks that status 400 bad request returned when user visits url when not logged in.
+     * Checks that status 401 unauthorized returned when user visits url when not logged in.
      */
     @Test
-    void deleteJob_shouldReturn400BadRequestWhenNotLoggedIn(){
+    void deleteJob_shouldReturn401unauthorizedWhenNotLoggedIn(){
         // call url to get jobs, no passed in jwt
         Response response = APP.client().target("http://localhost:8080/api/job-roles/99")
                 .request()
                 .delete();
 
-        // check status code 400 bad request returned
-        Assertions.assertEquals(400,response.getStatus());
+        // check status code 401 unauthorized returned
+        Assertions.assertEquals(401,response.getStatus());
     }
 
     /**
@@ -276,7 +276,7 @@ public class JobIntegrationTest {
                 .request().header("Authorization", "Bearer " + getUserJWT())
                 .delete();
 
-        // check status code 400 bad request returned
+        // check status code 403 forbidden returned
         Assertions.assertEquals(403,response.getStatus());
     }
 }
