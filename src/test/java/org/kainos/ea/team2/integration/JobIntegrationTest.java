@@ -100,15 +100,6 @@ public class JobIntegrationTest {
      }
 
     /**
-     * Verify that the getJobSpec method returns a JobSpecificationResponse.
-     * This test assumes that the JobSpecificationResponse class corresponds to
-     * the structure of the JSON response from the API endpoint and checks that
-     * each necessary field is populated in the response.
-     */
-    @Test
-    void getJobSpec_shouldReturnJobSpecDetails() {
-
-    /**
      * Verify that the getJobs method returns a list of jobs from the database when logged in as an admin..
      */
     @Test
@@ -139,6 +130,9 @@ public class JobIntegrationTest {
 
     /**
      * Verify that the getJobSpec method returns a JobSpecificationResponse for a user.
+     * This test assumes that the JobSpecificationResponse class corresponds to
+     * the structure of the JSON response from the API endpoint and checks that
+     * each necessary field is populated in the response.
      */
     @Test
     void getJobSpec_shouldReturnJobSpecForUser() {
@@ -154,6 +148,19 @@ public class JobIntegrationTest {
 
         // check response entity is not null
         Assertions.assertNotNull(response.getEntity());
+
+        // Assuming the framework already interprets response as JSON
+        JobSpecificationResponse jobSpecResponse = response.readEntity(JobSpecificationResponse.class);
+
+        // Check if the necessary fields are present and not null
+        Assertions.assertNotNull(jobSpecResponse.getJobName());
+        Assertions.assertNotNull(jobSpecResponse.getJobSpecification());
+        Assertions.assertNotNull(jobSpecResponse.getSharepointLink());
+        Assertions.assertNotNull(jobSpecResponse.getResponsibilitiesList());
+
+        // Check the responsibilities list and ensure it's not empty
+        List<String> responsibilitiesList = jobSpecResponse.getResponsibilitiesList();
+        Assertions.assertFalse(responsibilitiesList.isEmpty());
 
     }
 
